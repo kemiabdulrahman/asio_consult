@@ -536,7 +536,7 @@
                     rows="4"
                     bind:value={productForm.specs}
                     class="input-field"
-                    placeholder='{"Processor": "Intel Core i5", "RAM": "8GB", "Storage": "256GB SSD"}'
+                    placeholder="Enter specifications in JSON format"
                   ></textarea>
                   <p class="text-sm text-gray-500 mt-1">Enter specifications in JSON format</p>
                 </div>
@@ -711,7 +711,7 @@
   {/if}
 </div>
 
-<style>
+<style lang="postcss">
   .nav-item {
     @apply flex items-center w-full px-6 py-3 text-left text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors;
   }

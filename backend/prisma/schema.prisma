@@ -14,7 +14,7 @@ model Product {
   price       Float
   category    String   // "laptop", "accessory", "software"
   brand       String?
-  specs       Json?    // Store specifications as JSON
+  specs       String?  // Store specifications as JSON string
   image       String?
   inStock     Boolean  @default(true)
   quantity    Int      @default(0)
@@ -31,7 +31,7 @@ model Service {
   price       Float?
   category    String   // "training", "software", "consulting"
   duration    String?  // e.g., "3 months", "1 week"
-  features    Json?    // Array of features
+  features    String?  // Array of features as JSON string
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -68,7 +68,7 @@ model Order {
   customerName String
   customerEmail String
   customerPhone String
-  items      Json     // Array of ordered items
+  items      String   // Array of ordered items as JSON string
   total      Float
   status     String   @default("pending") // pending, confirmed, delivered, cancelled
   createdAt  DateTime @default(now())

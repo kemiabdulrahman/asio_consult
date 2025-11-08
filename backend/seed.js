@@ -25,13 +25,13 @@ async function seedDatabase() {
         price: 285000,
         category: 'laptop',
         brand: 'Acer',
-        specs: {
+        specs: JSON.stringify({
           'Processor': 'Intel Core i5-11th Gen',
           'RAM': '8GB DDR4',
           'Storage': '256GB SSD',
           'Display': '14" HD',
           'Operating System': 'Windows 11 Pro'
-        },
+        }),
         inStock: true,
         quantity: 15
       },
@@ -41,14 +41,14 @@ async function seedDatabase() {
         price: 320000,
         category: 'laptop',
         brand: 'HP',
-        specs: {
+        specs: JSON.stringify({
           'Processor': 'AMD Ryzen 5 5500U',
           'RAM': '8GB DDR4',
           'Storage': '512GB SSD',
           'Display': '15.6" HD',
           'Graphics': 'AMD Radeon Graphics',
           'Operating System': 'Windows 11 Pro'
-        },
+        }),
         inStock: true,
         quantity: 12
       },
@@ -58,13 +58,13 @@ async function seedDatabase() {
         price: 245000,
         category: 'laptop',
         brand: 'Dell',
-        specs: {
+        specs: JSON.stringify({
           'Processor': 'Intel Core i3-10th Gen',
           'RAM': '4GB DDR4 (Upgradeable)',
           'Storage': '256GB SSD',
           'Display': '15.6" HD',
           'Operating System': 'Windows 11 Home'
-        },
+        }),
         inStock: true,
         quantity: 8
       },
@@ -74,14 +74,14 @@ async function seedDatabase() {
         price: 420000,
         category: 'laptop',
         brand: 'Lenovo',
-        specs: {
+        specs: JSON.stringify({
           'Processor': 'Intel Core i7-11th Gen',
           'RAM': '16GB DDR4',
           'Storage': '512GB SSD',
           'Display': '14" FHD IPS',
           'Security': 'Fingerprint Reader',
           'Operating System': 'Windows 11 Pro'
-        },
+        }),
         inStock: true,
         quantity: 6
       },
@@ -91,11 +91,11 @@ async function seedDatabase() {
         price: 15000,
         category: 'accessory',
         brand: 'Logitech',
-        specs: {
+        specs: JSON.stringify({
           'Connection': 'Wireless 2.4GHz',
           'Battery Life': 'Up to 2 years',
           'Compatibility': 'Windows, Mac, Linux'
-        },
+        }),
         inStock: true,
         quantity: 25
       },
@@ -105,23 +105,28 @@ async function seedDatabase() {
         price: 12000,
         category: 'accessory',
         brand: 'Generic',
-        specs: {
+        specs: JSON.stringify({
           'Material': 'Aluminum Alloy',
           'Fans': '2 x 140mm',
           'Height Adjustment': '6 levels',
           'Compatibility': 'Up to 17" laptops'
-        },
+        }),
         inStock: true,
         quantity: 20
       }
     ];
 
     for (const product of sampleProducts) {
-      await prisma.product.upsert({
-        where: { name: product.name },
-        update: {},
-        create: product
-      });
+      try {
+        await prisma.product.create({
+          data: product
+        });
+      } catch (error) {
+        // Ignore if product already exists
+        if (!error.message.includes('Unique constraint')) {
+          throw error;
+        }
+      }
     }
 
     // Create sample services
@@ -132,14 +137,14 @@ async function seedDatabase() {
         price: 20000,
         category: 'software',
         duration: 'Lifetime License',
-        features: [
+        features: JSON.stringify([
           'Student registration and management',
           'Basic grade entry and calculations',
           'Simple report card generation',
           'Up to 100 students',
           'Email support',
           'Basic training included'
-        ]
+        ])
       },
       {
         name: 'SASR - Professional Package',
@@ -147,7 +152,7 @@ async function seedDatabase() {
         price: 35000,
         category: 'software',
         duration: 'Lifetime License + 1 Year Support',
-        features: [
+        features: JSON.stringify([
           'Everything in Basic package',
           'Advanced reporting and analytics',
           'Fee management and payment tracking',
@@ -156,7 +161,7 @@ async function seedDatabase() {
           'Phone and email support',
           'Advanced training included',
           'Custom report templates'
-        ]
+        ])
       },
       {
         name: 'SASR - Enterprise Package',
@@ -164,7 +169,7 @@ async function seedDatabase() {
         price: 50000,
         category: 'software',
         duration: 'Lifetime License + 2 Years Support',
-        features: [
+        features: JSON.stringify([
           'Everything in Professional package',
           'Multi-campus support',
           'Custom feature development',
@@ -173,7 +178,7 @@ async function seedDatabase() {
           '24/7 priority support',
           'Integration with existing systems',
           'Advanced security features'
-        ]
+        ])
       },
       {
         name: 'Basic Computer Training',
@@ -181,14 +186,14 @@ async function seedDatabase() {
         price: 25000,
         category: 'training',
         duration: '4 weeks',
-        features: [
+        features: JSON.stringify([
           'Microsoft Word, Excel, PowerPoint',
           'Internet and email usage',
           'File management and organization',
           'Basic computer troubleshooting',
           'Certificate of completion',
           'Hands-on practical sessions'
-        ]
+        ])
       },
       {
         name: 'Advanced ICT Training',
@@ -196,7 +201,7 @@ async function seedDatabase() {
         price: 45000,
         category: 'training',
         duration: '8 weeks',
-        features: [
+        features: JSON.stringify([
           'Network setup and administration',
           'Educational software integration',
           'Computer lab management',
@@ -204,7 +209,7 @@ async function seedDatabase() {
           'Digital teaching tools',
           'Professional certification',
           'Ongoing support and resources'
-        ]
+        ])
       },
       {
         name: 'ICT Infrastructure Consulting',
@@ -212,14 +217,14 @@ async function seedDatabase() {
         price: null, // Custom pricing
         category: 'consulting',
         duration: 'Project-based',
-        features: [
+        features: JSON.stringify([
           'ICT infrastructure assessment',
           'Network design and planning',
           'Hardware specification and procurement',
           'Implementation project management',
           'Staff training and handover',
           'Ongoing maintenance planning'
-        ]
+        ])
       },
       {
         name: 'Digital Learning Platform Setup',
@@ -227,23 +232,28 @@ async function seedDatabase() {
         price: 75000,
         category: 'consulting',
         duration: '6 weeks',
-        features: [
+        features: JSON.stringify([
           'Learning Management System setup',
           'Content migration and organization',
           'Teacher training on digital tools',
           'Student orientation programs',
           'Technical support setup',
           'Performance monitoring tools'
-        ]
+        ])
       }
     ];
 
     for (const service of sampleServices) {
-      await prisma.service.upsert({
-        where: { name: service.name },
-        update: {},
-        create: service
-      });
+      try {
+        await prisma.service.create({
+          data: service
+        });
+      } catch (error) {
+        // Ignore if service already exists
+        if (!error.message.includes('Unique constraint')) {
+          throw error;
+        }
+      }
     }
 
     console.log('✅ Database seeded successfully!');
