@@ -242,7 +242,7 @@
         <div class="bg-white rounded-lg shadow-lg p-6">
           <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
           <div class="space-y-3">
-            
+            <a
               href="tel:+2348000000000"
               class="flex items-center w-full bg-green-600 hover:bg-green-700 text-white p-3 rounded-lg transition-colors"
             >
@@ -251,7 +251,7 @@
               </svg>
               Call Now
             </a>
-            
+            <a
               href="https://wa.me/2348000000000"
               class="flex items-center w-full bg-green-500 hover:bg-green-600 text-white p-3 rounded-lg transition-colors"
             >
@@ -260,7 +260,7 @@
               </svg>
               WhatsApp
             </a>
-            
+            <a
               href="mailto:info@asioconsult.com"
               class="flex items-center w-full bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-lg transition-colors"
             >
@@ -277,7 +277,7 @@
           <h3 class="text-lg font-semibold text-gray-900 mb-4">Follow Us</h3>
           <div class="grid grid-cols-2 gap-3">
             {#each socialLinks as social}
-              
+              <a
                 href={social.url}
                 class="flex items-center justify-center {social.color} hover:opacity-90 text-white p-3 rounded-lg transition-opacity"
               >
