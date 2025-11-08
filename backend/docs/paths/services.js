@@ -1,35 +1,12 @@
 module.exports = {
-  '/products': {
+  '/services': {
     get: {
-      tags: ['Products'],
-      summary: 'Get all products',
-      description: 'Retrieve a list of all products with optional filtering',
-      parameters: [
-        {
-          name: 'category',
-          in: 'query',
-          required: false,
-          schema: { type: 'string' },
-          description: 'Filter by category'
-        },
-        {
-          name: 'search',
-          in: 'query',
-          required: false,
-          schema: { type: 'string' },
-          description: 'Search products by name'
-        },
-        {
-          name: 'inStock',
-          in: 'query',
-          required: false,
-          schema: { type: 'boolean' },
-          description: 'Filter by stock status'
-        }
-      ],
+      tags: ['Services'],
+      summary: 'Get all services',
+      description: 'Retrieve a list of all available services',
       responses: {
         '200': {
-          description: 'List of products retrieved successfully',
+          description: 'List of services retrieved successfully',
           content: {
             'application/json': {
               schema: {
@@ -38,20 +15,21 @@ module.exports = {
                   success: { type: 'boolean' },
                   data: {
                     type: 'array',
-                    items: { $ref: '#/components/schemas/Product' }
+                    items: { $ref: '#/components/schemas/Service' }
                   },
                   message: { type: 'string' }
                 }
               }
             }
           }
-        }
+        },
+        '500': { description: 'Server error' }
       }
     },
     post: {
-      tags: ['Products'],
-      summary: 'Create a new product',
-      description: 'Create a new product (Admin only)',
+      tags: ['Services'],
+      summary: 'Create a new service',
+      description: 'Create a new service (Admin only)',
       security: [{ bearerAuth: [] }],
       requestBody: {
         required: true,
@@ -63,26 +41,23 @@ module.exports = {
                 name: { type: 'string' },
                 description: { type: 'string' },
                 price: { type: 'number' },
-                category: { type: 'string' },
-                quantity: { type: 'integer' },
-                inStock: { type: 'boolean' },
-                image: { type: 'string' }
+                duration: { type: 'string' }
               },
-              required: ['name', 'price', 'category']
+              required: ['name', 'price']
             }
           }
         }
       },
       responses: {
         '201': {
-          description: 'Product created successfully',
+          description: 'Service created successfully',
           content: {
             'application/json': {
               schema: {
                 type: 'object',
                 properties: {
                   success: { type: 'boolean' },
-                  data: { $ref: '#/components/schemas/Product' },
+                  data: { $ref: '#/components/schemas/Service' },
                   message: { type: 'string' }
                 }
               }
@@ -94,79 +69,43 @@ module.exports = {
       }
     }
   },
-  '/products/category/{category}': {
+  '/services/{id}': {
     get: {
-      tags: ['Products'],
-      summary: 'Get products by category',
-      description: 'Retrieve all products in a specific category',
-      parameters: [
-        {
-          name: 'category',
-          in: 'path',
-          required: true,
-          schema: { type: 'string' },
-          description: 'Product category'
-        }
-      ],
-      responses: {
-        '200': {
-          description: 'Products retrieved successfully',
-          content: {
-            'application/json': {
-              schema: {
-                type: 'object',
-                properties: {
-                  success: { type: 'boolean' },
-                  data: {
-                    type: 'array',
-                    items: { $ref: '#/components/schemas/Product' }
-                  },
-                  message: { type: 'string' }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  '/products/{id}': {
-    get: {
-      tags: ['Products'],
-      summary: 'Get product by ID',
-      description: 'Retrieve details of a specific product',
+      tags: ['Services'],
+      summary: 'Get service by ID',
+      description: 'Retrieve details of a specific service',
       parameters: [
         {
           name: 'id',
           in: 'path',
           required: true,
           schema: { type: 'string' },
-          description: 'Product ID'
+          description: 'Service ID'
         }
       ],
       responses: {
         '200': {
-          description: 'Product retrieved successfully',
+          description: 'Service retrieved successfully',
           content: {
             'application/json': {
               schema: {
                 type: 'object',
                 properties: {
                   success: { type: 'boolean' },
-                  data: { $ref: '#/components/schemas/Product' },
+                  data: { $ref: '#/components/schemas/Service' },
                   message: { type: 'string' }
                 }
               }
             }
           }
         },
-        '404': { description: 'Product not found' }
+        '404': { description: 'Service not found' }
       }
     },
     put: {
-      tags: ['Products'],
-      summary: 'Update product',
-      description: 'Update an existing product (Admin only)',
+      tags: ['Services'],
+      summary: 'Update service',
+      description: 'Update an existing service (Admin only)',
       security: [{ bearerAuth: [] }],
       parameters: [
         {
@@ -174,7 +113,7 @@ module.exports = {
           in: 'path',
           required: true,
           schema: { type: 'string' },
-          description: 'Product ID'
+          description: 'Service ID'
         }
       ],
       requestBody: {
@@ -187,10 +126,7 @@ module.exports = {
                 name: { type: 'string' },
                 description: { type: 'string' },
                 price: { type: 'number' },
-                category: { type: 'string' },
-                quantity: { type: 'integer' },
-                inStock: { type: 'boolean' },
-                image: { type: 'string' }
+                duration: { type: 'string' }
               }
             }
           }
@@ -198,14 +134,14 @@ module.exports = {
       },
       responses: {
         '200': {
-          description: 'Product updated successfully',
+          description: 'Service updated successfully',
           content: {
             'application/json': {
               schema: {
                 type: 'object',
                 properties: {
                   success: { type: 'boolean' },
-                  data: { $ref: '#/components/schemas/Product' },
+                  data: { $ref: '#/components/schemas/Service' },
                   message: { type: 'string' }
                 }
               }
@@ -213,13 +149,13 @@ module.exports = {
           }
         },
         '401': { description: 'Unauthorized' },
-        '404': { description: 'Product not found' }
+        '404': { description: 'Service not found' }
       }
     },
     delete: {
-      tags: ['Products'],
-      summary: 'Delete product',
-      description: 'Delete a product (Admin only)',
+      tags: ['Services'],
+      summary: 'Delete service',
+      description: 'Delete a service (Admin only)',
       security: [{ bearerAuth: [] }],
       parameters: [
         {
@@ -227,12 +163,12 @@ module.exports = {
           in: 'path',
           required: true,
           schema: { type: 'string' },
-          description: 'Product ID'
+          description: 'Service ID'
         }
       ],
       responses: {
         '200': {
-          description: 'Product deleted successfully',
+          description: 'Service deleted successfully',
           content: {
             'application/json': {
               schema: {
@@ -246,7 +182,7 @@ module.exports = {
           }
         },
         '401': { description: 'Unauthorized' },
-        '404': { description: 'Product not found' }
+        '404': { description: 'Service not found' }
       }
     }
   }
