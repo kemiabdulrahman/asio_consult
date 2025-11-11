@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="600" height="400">
+  <defs>
+    <linearGradient id="aboutGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#dbeafe;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#93c5fd;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="600" height="400" fill="url(#aboutGradient)"/>
+  
+  <!-- Team/People illustration -->
+  <g transform="translate(100, 80)">
+    <!-- Person 1 -->
+    <circle cx="50" cy="30" r="20" fill="#3b82f6"/>
+    <path d="M 30 60 Q 30 50 50 50 Q 70 50 70 60 L 70 100 Q 70 110 60 110 L 40 110 Q 30 110 30 100 Z" fill="#3b82f6"/>
+    
+    <!-- Person 2 -->
+    <circle cx="150" cy="30" r="20" fill="#0284c7"/>
+    <path d="M 130 60 Q 130 50 150 50 Q 170 50 170 60 L 170 100 Q 170 110 160 110 L 140 110 Q 130 110 130 100 Z" fill="#0284c7"/>
+    
+    <!-- Person 3 -->
+    <circle cx="250" cy="30" r="20" fill="#0369a1"/>
+    <path d="M 230 60 Q 230 50 250 50 Q 270 50 270 60 L 270 100 Q 270 110 260 110 L 240 110 Q 230 110 230 100 Z" fill="#0369a1"/>
+  </g>
+  
+  <!-- Text -->
+  <g transform="translate(50, 250)">
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#0f172a">
+      Our Team of Experts
+    </text>
+    <text x="0" y="50" font-family="Arial, sans-serif" font-size="16" fill="#475569" max-width="500">
+      Dedicated professionals providing quality education and ICT solutions
+    </text>
+  </g>
+</svg>

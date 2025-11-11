@@ -11,7 +11,7 @@
 </script>
 
 <div class="card hover:shadow-lg transition-shadow duration-300 h-full flex flex-col">
-  <div class="flex-1">
+  <div class="flex-1 flex flex-col">
     <div class="mb-4">
       <h3 class="text-xl font-semibold text-gray-900 mb-2">{service.name}</h3>
       <p class="text-gray-600 mb-4">{service.description}</p>
@@ -33,7 +33,7 @@
       </div>
     {/if}
 
-    <div class="flex items-center justify-between mb-4">
+    <div class="flex items-center justify-between mb-4 mt-auto">
       <div>
         <span class="text-2xl font-bold text-primary-600">
           {formatPrice(service.price)}

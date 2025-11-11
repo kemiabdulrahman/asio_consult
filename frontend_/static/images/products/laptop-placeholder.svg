@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="600" height="400">
+  <defs>
+    <linearGradient id="productGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e0e7ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#c7d2fe;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="600" height="400" fill="url(#productGradient)"/>
+  
+  <!-- Laptop illustration -->
+  <g transform="translate(100, 60)">
+    <!-- Screen -->
+    <rect x="20" y="0" width="260" height="160" rx="8" fill="#3b82f6" stroke="#1e40af" stroke-width="3"/>
+    
+    <!-- Screen shine effect -->
+    <rect x="30" y="10" width="240" height="140" fill="#60a5fa" opacity="0.6" rx="4"/>
+    
+    <!-- Keyboard area -->
+    <rect x="0" y="160" width="300" height="20" fill="#1f2937"/>
+    
+    <!-- Base -->
+    <ellipse cx="150" cy="185" rx="120" ry="15" fill="#374151"/>
+  </g>
+  
+  <!-- Text -->
+  <g transform="translate(50, 280)">
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#1e293b">
+      Product Placeholder
+    </text>
+    <text x="0" y="35" font-family="Arial, sans-serif" font-size="14" fill="#64748b">
+      Replace with actual product image via admin panel
+    </text>
+  </g>
+</svg>

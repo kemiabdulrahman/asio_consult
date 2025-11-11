@@ -20,7 +20,7 @@
       </div>
       <div class="relative">
         <img 
-          src="/images/hero-image.jpg" 
+          src="/images/hero/hero-image.svg" 
           alt="ASIO CONSULT ICT Solutions"
           class="rounded-lg shadow-xl"
         />

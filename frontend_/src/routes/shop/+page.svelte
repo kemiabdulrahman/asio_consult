@@ -42,7 +42,11 @@
     try {
       loading = true;
       const response = await productAPI.getAll();
-      products = response.data.data;
+      // Parse specs which may be stored as JSON strings from the backend
+      products = response.data.data.map(p => ({
+        ...p,
+        specs: typeof p.specs === 'string' && p.specs.length ? JSON.parse(p.specs) : p.specs || {}
+      }));
       filterAndSortProducts();
     } catch (error) {
       console.error('Error loading products:', error);
@@ -208,7 +212,7 @@
             </p>
             <div class="flex items-center space-x-4">
               <span class="text-sm text-gray-600">View:</span>
-              <button class="p-2 text-primary-600">
+              <button class="p-2 text-primary-600" aria-label="Toggle view">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
                 </svg>

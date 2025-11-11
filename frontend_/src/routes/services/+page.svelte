@@ -10,7 +10,18 @@
   onMount(async () => {
     try {
       const response = await serviceAPI.getAll();
-      services = response.data.data;
+      // Parse features which may be stored as JSON strings from the backend
+      services = response.data.data.map(s => {
+        try {
+          return {
+            ...s,
+            features: typeof s.features === 'string' && s.features.trim().length ? JSON.parse(s.features) : Array.isArray(s.features) ? s.features : []
+          };
+        } catch (e) {
+          console.warn('Failed to parse features for service', s.name, e);
+          return { ...s, features: [] };
+        }
+      });
     } catch (error) {
       console.error('Error loading services:', error);
       toast.add('Failed to load services', 'error');
@@ -109,7 +120,7 @@
         </div>
         <div class="relative">
           <img 
-            src="/images/sasr-screenshot.png" 
+            src="/images/hero/sasr-screenshot.svg" 
             alt="SASR Software Interface"
             class="rounded-lg shadow-lg"
           />

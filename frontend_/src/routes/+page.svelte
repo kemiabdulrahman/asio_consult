@@ -133,7 +133,7 @@
       </div>
       <div class="relative">
         <img 
-          src="/images/about-image.jpg" 
+          src="/images/hero/about-image.svg" 
           alt="ASIO CONSULT Office"
           class="rounded-lg shadow-lg"
         />

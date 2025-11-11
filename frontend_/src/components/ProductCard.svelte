@@ -15,10 +15,10 @@
   }
 </script>
 
-<div class="card hover:shadow-lg transition-shadow duration-300">
+<div class="card hover:shadow-lg transition-shadow duration-300 h-full flex flex-col">
   <div class="relative mb-4">
     <img 
-      src={product.image || '/images/laptop-placeholder.jpg'} 
+      src={product.image || '/images/products/laptop-placeholder.svg'} 
       alt={product.name}
       class="w-full h-48 object-cover rounded-lg"
     />
@@ -33,7 +33,7 @@
     {/if}
   </div>
 
-  <div class="flex-1">
+  <div class="flex-1 flex flex-col">
     <h3 class="text-lg font-semibold text-gray-900 mb-2">{product.name}</h3>
     <p class="text-gray-600 text-sm mb-3 line-clamp-2">{product.description}</p>
     
@@ -47,7 +47,7 @@
       </div>
     {/if}
 
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between mt-auto">
       <span class="text-xl font-bold text-primary-600">
         {formatPrice(product.price)}
       </span>

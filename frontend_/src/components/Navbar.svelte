@@ -20,7 +20,7 @@
       <!-- Logo -->
       <div class="flex items-center">
         <a href="/" class="flex items-center">
-          <img src="/logo.png" alt="ASIO CONSULT" class="h-10 w-auto mr-3" />
+          <img src="/images/logos/logo.svg" alt="ASIO CONSULT" class="h-10 w-auto mr-3" />
           <span class="text-xl font-bold text-primary-700">ASIO CONSULT</span>
         </a>
       </div>
