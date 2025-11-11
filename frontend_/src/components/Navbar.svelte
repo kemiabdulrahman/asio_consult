@@ -1,6 +1,7 @@
 <script>
   import { cart } from '../lib/stores.js';
   import { page } from '$app/stores';
+  import { goto } from '$app/navigation';
   
   let isMenuOpen = false;
   let cartItemCount = 0;
@@ -11,6 +12,10 @@
 
   function toggleMenu() {
     isMenuOpen = !isMenuOpen;
+  }
+
+  function goToCart() {
+    goto('/cart');
   }
 </script>
 
@@ -39,9 +44,12 @@
         <a href="/contact" class="nav-link" class:active={$page.url.pathname === '/contact'}>
           Contact
         </a>
+        <a href="/orders" class="nav-link" class:active={$page.url.pathname === '/orders'}>
+          Orders
+        </a>
         
         <!-- Cart Icon -->
-        <button class="relative p-2 text-gray-600 hover:text-primary-600">
+        <button on:click={goToCart} class="relative p-2 text-gray-600 hover:text-primary-600">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 7.5L5.5 21"></path>
           </svg>
@@ -75,6 +83,7 @@
           <a href="/shop" class="mobile-nav-link">Shop</a>
           <a href="/services" class="mobile-nav-link">Services</a>
           <a href="/contact" class="mobile-nav-link">Contact</a>
+          <a href="/orders" class="mobile-nav-link">Orders</a>
         </div>
       </div>
     {/if}

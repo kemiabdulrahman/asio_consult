@@ -34,7 +34,20 @@ class ProductController {
 
   async createProduct(req, res) {
     try {
-      const product = await ProductService.createProduct(req.body);
+      const productData = {
+        ...req.body,
+        price: parseFloat(req.body.price),
+        quantity: parseInt(req.body.quantity),
+        inStock: req.body.inStock === 'true' || req.body.inStock === true
+      };
+
+      // Handle image file if uploaded
+      if (req.file) {
+        // Store the file path relative to the backend
+        productData.image = `/uploads/products/${req.file.filename}`;
+      }
+
+      const product = await ProductService.createProduct(productData);
       return successResponse(res, product, 'Product created successfully', 201);
     } catch (error) {
       return errorResponse(res, error.message);
@@ -44,7 +57,21 @@ class ProductController {
   async updateProduct(req, res) {
     try {
       const { id } = req.params;
-      const product = await ProductService.updateProduct(id, req.body);
+      const productData = { ...req.body };
+
+      // Parse numeric fields if they exist
+      if (productData.price) productData.price = parseFloat(productData.price);
+      if (productData.quantity) productData.quantity = parseInt(productData.quantity);
+      if (productData.inStock !== undefined) {
+        productData.inStock = productData.inStock === 'true' || productData.inStock === true;
+      }
+
+      // Handle image file if uploaded
+      if (req.file) {
+        productData.image = `/uploads/products/${req.file.filename}`;
+      }
+
+      const product = await ProductService.updateProduct(id, productData);
       return successResponse(res, product, 'Product updated successfully');
     } catch (error) {
       return errorResponse(res, error.message);

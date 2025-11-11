@@ -23,9 +23,12 @@
     brand: '',
     specs: {},
     inStock: true,
-    quantity: 0
+    quantity: 0,
+    image: null,
+    imagePreview: null
   };
   let editingProduct = null;
+  let productImageInput;
 
   // Service form
   let serviceForm = {
@@ -98,20 +101,77 @@
     }
   }
 
+  function handleProductImageChange(event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.add('Image must be less than 5MB', 'error');
+      return;
+    }
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.add('Please upload a valid image file', 'error');
+      return;
+    }
+
+    productForm.image = file;
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      productForm.imagePreview = e.target?.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
   async function handleProductSubmit() {
     try {
-      const productData = {
-        ...productForm,
-        price: parseFloat(productForm.price),
-        quantity: parseInt(productForm.quantity),
-        specs: typeof productForm.specs === 'string' ? JSON.parse(productForm.specs) : productForm.specs
-      };
+      const formData = new FormData();
+      formData.append('name', productForm.name);
+      formData.append('description', productForm.description);
+      formData.append('price', parseFloat(productForm.price));
+      formData.append('category', productForm.category);
+      formData.append('brand', productForm.brand);
+      formData.append('quantity', parseInt(productForm.quantity));
+      formData.append('inStock', productForm.inStock);
+      formData.append('specs', typeof productForm.specs === 'string' ? productForm.specs : JSON.stringify(productForm.specs));
+      
+      if (productForm.image) {
+        formData.append('image', productForm.image);
+      }
 
       if (editingProduct) {
-        await productAPI.update(editingProduct.id, productData);
+        // For updates, use JSON if no new image, otherwise use FormData
+        if (!productForm.image) {
+          const productData = {
+            name: productForm.name,
+            description: productForm.description,
+            price: parseFloat(productForm.price),
+            quantity: parseInt(productForm.quantity),
+            category: productForm.category,
+            brand: productForm.brand,
+            inStock: productForm.inStock,
+            specs: typeof productForm.specs === 'string' ? productForm.specs : JSON.stringify(productForm.specs)
+          };
+          await productAPI.update(editingProduct.id, productData);
+        } else {
+          await productAPI.update(editingProduct.id, formData);
+        }
         toast.add('Product updated successfully', 'success');
       } else {
-        await productAPI.create(productData);
+        // For new products, use FormData to handle image upload
+        const response = await fetch('/api/products', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+          }
+        });
+        
+        if (!response.ok) throw new Error('Failed to create product');
         toast.add('Product created successfully', 'success');
       }
 
@@ -162,8 +222,11 @@
       brand: '',
       specs: {},
       inStock: true,
-      quantity: 0
+      quantity: 0,
+      image: null,
+      imagePreview: null
     };
+    if (productImageInput) productImageInput.value = '';
   }
 
   async function markMessageAsRead(messageId) {
@@ -541,6 +604,34 @@
                   <p class="text-sm text-gray-500 mt-1">Enter specifications in JSON format</p>
                 </div>
 
+                <div>
+                  <label for="product-image" class="block text-sm font-medium text-gray-700 mb-2">
+                    Product Image
+                  </label>
+                  <div class="flex items-center space-x-4">
+                    <div class="flex-1">
+                      <input
+                        id="product-image"
+                        type="file"
+                        bind:this={productImageInput}
+                        on:change={handleProductImageChange}
+                        accept="image/*"
+                        class="input-field"
+                      />
+                      <p class="text-sm text-gray-500 mt-1">Max size: 5MB. Formats: JPG, PNG, WebP</p>
+                    </div>
+                    {#if productForm.imagePreview}
+                      <div class="flex-shrink-0">
+                        <img 
+                          src={productForm.imagePreview} 
+                          alt="Preview" 
+                          class="w-20 h-20 object-cover rounded-lg border border-gray-300"
+                        />
+                      </div>
+                    {/if}
+                  </div>
+                </div>
+
                 <div class="flex items-center">
                   <input
                     id="product-instock"
@@ -682,7 +773,7 @@
                             Reply via Email
                           </a>
                           {#if message.phone}
-                            
+                            <a
                               href="tel:{message.phone}"
                               class="block text-sm text-blue-600 hover:text-blue-800"
                             >
