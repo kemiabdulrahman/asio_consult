@@ -72,6 +72,20 @@ class ProductController {
         return errorResponse(res, 'Missing required fields: name, description, price, category', 400);
       }
 
+      // Handle single or multiple image uploads
+      let primaryImage = null;
+      const imageUrls = [];
+
+      if (req.files && req.files.length > 0) {
+        // If multiple files uploaded
+        imageUrls.push(...req.files.map(file => `/uploads/products/${file.filename}`));
+        primaryImage = imageUrls[0]; // First image is primary
+      } else if (req.file) {
+        // Fallback for single file upload (backward compatibility)
+        primaryImage = `/uploads/products/${req.file.filename}`;
+        imageUrls.push(primaryImage);
+      }
+
       const productData = {
         name,
         description,
@@ -79,14 +93,22 @@ class ProductController {
         category,
         brand: brand || null,
         specs: specs ? JSON.parse(specs) : null,
-        image: req.file ? `/uploads/products/${req.file.filename}` : null,
+        image: primaryImage,
         quantity: quantity ? parseInt(quantity) : 0,
         inStock: quantity > 0
       };
 
       const product = await ProductService.createProduct(productData);
 
-      return successResponse(res, 'Product created successfully', product, 201);
+      // Add all images to the product
+      if (imageUrls.length > 0) {
+        await ProductService.addProductImages(product.id, imageUrls);
+      }
+
+      // Fetch product with images for response
+      const productWithImages = await ProductService.getProductById(product.id);
+
+      return successResponse(res, 'Product created successfully', productWithImages, 201);
     } catch (error) {
       console.error('Create product error:', error);
       return errorResponse(res, error.message || 'Failed to create product', 500);
@@ -107,11 +129,14 @@ class ProductController {
       if (brand !== undefined) productData.brand = brand || null;
       if (specs) productData.specs = JSON.parse(specs);
       if (quantity !== undefined) productData.quantity = parseInt(quantity);
+      
+      // Handle image updates (single file for backward compatibility)
       if (req.file) productData.image = `/uploads/products/${req.file.filename}`;
 
       const product = await ProductService.updateProduct(id, productData);
+      const productWithImages = await ProductService.getProductById(id);
 
-      return successResponse(res, 'Product updated successfully', product, 200);
+      return successResponse(res, 'Product updated successfully', productWithImages, 200);
     } catch (error) {
       console.error('Update product error:', error);
 
@@ -120,6 +145,105 @@ class ProductController {
       }
 
       return errorResponse(res, error.message || 'Failed to update product', 500);
+    }
+  }
+
+  // ==================== IMAGE ENDPOINTS ====================
+
+  static async addProductImages(req, res) {
+    /**
+     * POST /products/:id/images
+     * Upload additional images for an existing product
+     */
+    try {
+      const { id } = req.params;
+
+      if (!req.files || req.files.length === 0) {
+        return errorResponse(res, 'No files uploaded', 400);
+      }
+
+      const imageUrls = req.files.map(file => `/uploads/products/${file.filename}`);
+
+      await ProductService.addProductImages(id, imageUrls);
+      const product = await ProductService.getProductById(id);
+
+      return successResponse(res, 'Images added successfully', product, 200);
+    } catch (error) {
+      console.error('Add product images error:', error);
+
+      if (error.message === 'Product not found') {
+        return errorResponse(res, 'Product not found', 404);
+      }
+
+      return errorResponse(res, error.message || 'Failed to add images', 500);
+    }
+  }
+
+  static async deleteProductImage(req, res) {
+    /**
+     * DELETE /products/:productId/images/:imageId
+     * Remove a specific image from a product
+     */
+    try {
+      const { imageId } = req.params;
+
+      await ProductService.deleteProductImage(imageId);
+
+      return successResponse(res, 'Image deleted successfully', null, 200);
+    } catch (error) {
+      console.error('Delete product image error:', error);
+
+      if (error.message === 'Image not found') {
+        return errorResponse(res, 'Image not found', 404);
+      }
+
+      return errorResponse(res, error.message || 'Failed to delete image', 500);
+    }
+  }
+
+  static async reorderProductImages(req, res) {
+    /**
+     * PUT /products/:id/images/reorder
+     * Reorder product images
+     * Body: { imageOrder: [{ id: "...", order: 0 }, ...] }
+     */
+    try {
+      const { id } = req.params;
+      const { imageOrder } = req.body;
+
+      if (!imageOrder || !Array.isArray(imageOrder)) {
+        return errorResponse(res, 'Invalid imageOrder format', 400);
+      }
+
+      await ProductService.reorderProductImages(id, imageOrder);
+      const product = await ProductService.getProductById(id);
+
+      return successResponse(res, 'Images reordered successfully', product, 200);
+    } catch (error) {
+      console.error('Reorder product images error:', error);
+
+      if (error.message === 'Product not found') {
+        return errorResponse(res, 'Product not found', 404);
+      }
+
+      return errorResponse(res, error.message || 'Failed to reorder images', 500);
+    }
+  }
+
+  static async getProductImages(req, res) {
+    /**
+     * GET /products/:id/images
+     * Get all images for a product
+     */
+    try {
+      const { id } = req.params;
+
+      const images = await ProductService.getProductImages(id);
+
+      return successResponse(res, 'Images retrieved successfully', images, 200);
+    } catch (error) {
+      console.error('Get product images error:', error);
+      return errorResponse(res, error.message || 'Failed to fetch images', 500);
     }
   }
 

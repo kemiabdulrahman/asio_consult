@@ -2,6 +2,22 @@
   export let product;
   import { cart, toast } from '../lib/stores.js';
 
+  // Compute primary image and count
+  // Use http://localhost:3001 (not /api) for image serving
+  const IMAGE_BASE_URL = 'http://localhost:3001';
+  function getFullImageUrl(url) {
+    if (!url) return '/images/products/laptop-placeholder.svg';
+    if (url.startsWith('http')) return url;
+    return IMAGE_BASE_URL + url;
+  }
+  $: primaryImage = product?.images?.[0]?.imageUrl
+    ? getFullImageUrl(product.images[0].imageUrl)
+    : product?.image
+      ? getFullImageUrl(product.image)
+      : '/images/products/laptop-placeholder.svg';
+  $: imageCount = product?.images?.length || 0;
+  $: moreImages = imageCount > 1 ? imageCount - 1 : 0;
+
   function addToCart() {
     cart.addItem(product);
     toast.add(`${product.name} added to cart!`, 'success');
@@ -18,10 +34,17 @@
 <div class="card hover:shadow-lg transition-shadow duration-300 h-full flex flex-col">
   <div class="relative mb-4">
     <img 
-      src={product.image || '/images/products/laptop-placeholder.svg'} 
+      src={primaryImage}
       alt={product.name}
       class="w-full h-48 object-cover rounded-lg"
     />
+    
+    {#if moreImages > 0}
+      <span class="absolute top-2 left-2 bg-black bg-opacity-70 text-white px-2 py-1 rounded-full text-xs font-semibold">
+        +{moreImages} {moreImages === 1 ? 'photo' : 'photos'}
+      </span>
+    {/if}
+
     {#if !product.inStock}
       <span class="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-xs font-semibold">
         Out of Stock

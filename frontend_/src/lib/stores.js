@@ -31,7 +31,7 @@ function createCartStore() {
   };
 }
 
-// ==================== AUTH STORE ====================
+// ==================== AUTH STORE (ADMIN) ====================
 function createAuthStore() {
   const initialState = {
     isAuthenticated: false,
@@ -90,6 +90,81 @@ function createAuthStore() {
         ...state,
         admin
       }));
+    }
+  };
+}
+
+// ==================== USER AUTH STORE ====================
+function createUserAuthStore() {
+  const initialState = {
+    isLoggedIn: false,
+    user: null,
+    token: null
+  };
+
+  const { subscribe, set } = writable(initialState);
+
+  // Check for existing token on init
+  if (browser) {
+    const token = localStorage.getItem('user_token');
+    const userStr = localStorage.getItem('user_data');
+    if (token) {
+      try {
+        const user = userStr ? JSON.parse(userStr) : null;
+        set({
+          isLoggedIn: true,
+          user,
+          token
+        });
+      } catch (e) {
+        console.error('Failed to parse user data from localStorage', e);
+      }
+    }
+  }
+
+  return {
+    subscribe,
+    login: (user, token) => {
+      if (browser) {
+        localStorage.setItem('user_token', token);
+        localStorage.setItem('user_data', JSON.stringify(user));
+      }
+      set({
+        isLoggedIn: true,
+        user,
+        token
+      });
+    },
+    logout: () => {
+      if (browser) {
+        localStorage.removeItem('user_token');
+        localStorage.removeItem('user_data');
+      }
+      set(initialState);
+    },
+    register: (user, token) => {
+      if (browser) {
+        localStorage.setItem('user_token', token);
+        localStorage.setItem('user_data', JSON.stringify(user));
+      }
+      set({
+        isLoggedIn: true,
+        user,
+        token
+      });
+    },
+    updateUser: (user) => {
+      set(state => ({
+        ...state,
+        user
+      }));
+    },
+    checkAuth: () => {
+      if (browser) {
+        const token = localStorage.getItem('user_token');
+        return !!token;
+      }
+      return false;
     }
   };
 }
@@ -153,5 +228,6 @@ function createDashboardStore() {
 // ==================== EXPORT STORES ====================
 export const cart = createCartStore();
 export const auth = createAuthStore();
+export const userAuth = createUserAuthStore();
 export const toast = createToastStore();
 export const dashboard = createDashboardStore();

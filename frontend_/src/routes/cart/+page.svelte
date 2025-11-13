@@ -1,10 +1,16 @@
 <script>
-  import { cart, toast } from '../../lib/stores.js';
+  import { cart, userAuth, toast } from '../../lib/stores.js';
   import { orderAPI, handleAPIError } from '../../lib/api.js';
   import { goto } from '$app/navigation';
+  import { onMount } from 'svelte';
 
   let cartItems = [];
   let isSubmitting = false;
+  let showAuthModal = false;
+  let userAuthData;
+  userAuth.subscribe(value => {
+    userAuthData = value;
+  });
 
   let customerInfo = {
     name: '',
@@ -22,8 +28,21 @@
 
   let paymentMethod = 'cash_on_delivery';
 
+  // Subscribe to user auth state
+  let userAuthState;
+  userAuth.subscribe(state => {
+    userAuthState = state;
+  });
+
   cart.subscribe(items => {
     cartItems = items;
+  });
+
+  // Check auth on mount
+  onMount(() => {
+    if (!userAuthState?.isLoggedIn) {
+      // User not logged in
+    }
   });
 
   function updateQuantity(productId, newQuantity) {
@@ -48,6 +67,27 @@
     const shippingCost = 0; // Can be calculated based on location
     const tax = 0; // Can be calculated based on items
     return subtotal + shippingCost + tax;
+  }
+
+  function handleCheckoutClick() {
+    // Check if user is logged in
+    if (!userAuthState?.isLoggedIn) {
+      showAuthModal = true;
+      return;
+    }
+    
+    // If logged in, proceed with checkout
+    placeOrder();
+  }
+
+  function goToLogin() {
+    showAuthModal = false;
+    goto('/login');
+  }
+
+  function goToSignUp() {
+    showAuthModal = false;
+    goto('/register');
   }
 
   async function placeOrder() {
@@ -392,8 +432,8 @@
 
             <!-- Place Order Button -->
             <button 
-              on:click={placeOrder}
-              disabled={isSubmitting}
+              on:click={handleCheckoutClick}
+              disabled={isSubmitting || cartItems.length === 0}
               class="w-full py-3 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {#if isSubmitting}
@@ -402,7 +442,7 @@
                   Processing...
                 </span>
               {:else}
-                Place Order
+                Proceed to Checkout
               {/if}
             </button>
 
@@ -414,6 +454,45 @@
       </div>
     {/if}
   </div>
+
+  <!-- Auth Modal (Sign Up / Log In) -->
+  {#if showAuthModal}
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-8">
+        <div class="text-center">
+          <svg class="w-16 h-16 mx-auto text-primary-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+          <h2 class="text-2xl font-bold text-gray-900 mb-2">Sign In Required</h2>
+          <p class="text-gray-600 mb-6">
+            You need to be signed in to complete your purchase. Please log in or create a new account.
+          </p>
+        </div>
+
+        <div class="space-y-3">
+          <button
+            on:click={goToLogin}
+            class="w-full py-3 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors"
+          >
+            Log In
+          </button>
+          <button
+            on:click={goToSignUp}
+            class="w-full py-3 bg-gray-100 text-gray-900 font-semibold rounded-lg hover:bg-gray-200 transition-colors"
+          >
+            Create Account
+          </button>
+        </div>
+
+        <button
+          on:click={() => showAuthModal = false}
+          class="w-full mt-4 py-2 text-gray-600 text-sm hover:text-gray-900 transition-colors"
+        >
+          Continue Shopping
+        </button>
+      </div>
+    </div>
+  {/if}
 </div>
 
 <style lang="postcss">

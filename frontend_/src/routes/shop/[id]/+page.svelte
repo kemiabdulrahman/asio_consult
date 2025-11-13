@@ -3,10 +3,10 @@
   import { page } from '$app/stores';
   import { productAPI } from '../../../lib/api.js';
   import { cart, toast } from '../../../lib/stores.js';
+  import ProductGallery from '../../../components/ProductGallery.svelte';
 
   let product = null;
   let loading = true;
-  let selectedImage = 0;
   let quantity = 1;
 
   onMount(async () => {
@@ -43,13 +43,6 @@
       currency: 'NGN'
     }).format(price);
   }
-
-  const images = [
-    '/images/laptop-placeholder.jpg',
-    '/images/laptop-angle1.jpg',
-    '/images/laptop-angle2.jpg',
-    '/images/laptop-ports.jpg'
-  ];
 </script>
 
 <svelte:head>
@@ -82,33 +75,9 @@
     </nav>
 
     <div class="lg:grid lg:grid-cols-2 lg:gap-12">
-      <!-- Product Images -->
+      <!-- Product Images Gallery -->
       <div class="mb-8 lg:mb-0">
-        <div class="aspect-square bg-gray-100 rounded-lg mb-4 overflow-hidden">
-          <img
-            src={product.image || images[selectedImage]}
-            alt={product.name}
-            class="w-full h-full object-cover"
-          />
-        </div>
-        
-        <!-- Thumbnail Images -->
-        <div class="grid grid-cols-4 gap-2">
-          {#each images as image, index}
-            <button
-              on:click={() => selectedImage = index}
-              class="aspect-square bg-gray-100 rounded border-2 overflow-hidden"
-              class:border-primary-600={selectedImage === index}
-              class:border-gray-200={selectedImage !== index}
-            >
-              <img
-                src={image}
-                alt={`${product.name} view ${index + 1}`}
-                class="w-full h-full object-cover"
-              />
-            </button>
-          {/each}
-        </div>
+        <ProductGallery {product} />
       </div>
 
       <!-- Product Info -->

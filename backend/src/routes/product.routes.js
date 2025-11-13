@@ -41,12 +41,20 @@ router.get('/', ProductController.getProducts);
 router.get('/category/:category', ProductController.getProductsByCategory);
 router.get('/brand/:brand', ProductController.getProductsByBrand);
 router.get('/:id', ProductController.getProduct);
+router.get('/:id/images', ProductController.getProductImages);
 
 // Admin routes
-router.post('/', authenticateAdmin, upload.single('image'), ProductController.createProduct);
-router.put('/:id', authenticateAdmin, upload.single('image'), ProductController.updateProduct);
+router.post('/', authenticateAdmin, upload.array('images', 10), ProductController.createProduct);
+router.put('/:id', authenticateAdmin, upload.array('images', 10), ProductController.updateProduct);
 router.patch('/:id/quantity', authenticateAdmin, ProductController.updateProductQuantity);
 router.get('/admin/low-stock', authenticateAdmin, ProductController.getLowStockProducts);
 router.delete('/:id', authenticateAdmin, ProductController.deleteProduct);
+
+// Image management routes
+router.post('/:id/images', authenticateAdmin, upload.array('images', 10), ProductController.addProductImages);
+router.delete('/:productId/images/:imageId', authenticateAdmin, ProductController.deleteProductImage);
+router.put('/:id/images/reorder', authenticateAdmin, ProductController.reorderProductImages);
+
+module.exports = router;
 
 module.exports = router;

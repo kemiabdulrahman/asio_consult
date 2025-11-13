@@ -5,6 +5,14 @@
   
   let isMenuOpen = false;
   let cartItemCount = 0;
+  import { browser } from '$app/environment';
+  let isAdmin = false;
+  let isUser = false;
+
+  if (browser) {
+    isAdmin = !!localStorage.getItem('admin_token');
+    isUser = !!localStorage.getItem('user_token');
+  }
 
   cart.subscribe(items => {
     cartItemCount = items.reduce((total, item) => total + item.quantity, 0);
@@ -44,9 +52,11 @@
         <a href="/contact" class="nav-link" class:active={$page.url.pathname === '/contact'}>
           Contact
         </a>
-        <a href="/orders" class="nav-link" class:active={$page.url.pathname === '/orders'}>
-          Orders
-        </a>
+        {#if isAdmin || isUser}
+          <a href="/orders" class="nav-link" class:active={$page.url.pathname === '/orders'}>
+            Orders
+          </a>
+        {/if}
         
         <!-- Cart Icon -->
         <button on:click={goToCart} class="relative p-2 text-gray-600 hover:text-primary-600">

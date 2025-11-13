@@ -87,6 +87,15 @@ export const contactAPI = {
 export const orderAPI = {
   create: (data) => api.post('/orders', data),
   getAll: (params) => api.get('/orders', { params }),
+  getUserOrders: () => {
+    const userToken = browser ? localStorage.getItem('user_token') : null;
+    if (userToken) {
+      return api.get('/orders/user/orders', {
+        headers: { Authorization: `Bearer ${userToken}` }
+      });
+    }
+    return Promise.reject('No user token');
+  },
   getById: (id) => api.get(`/orders/${id}/admin`),
   getByNumber: (orderNumber) => api.get(`/orders/${orderNumber}`),
   updateStatus: (id, orderStatus) => api.patch(`/orders/${id}/status`, { orderStatus }),
@@ -102,6 +111,48 @@ export const adminAPI = {
   login: (data) => api.post('/admin/login', data),
   create: (data) => api.post('/admin/create', data),
   getDashboardStats: () => api.get('/admin/dashboard')
+};
+
+// ==================== USER AUTHENTICATION ====================
+export const userAPI = {
+  login: (data) => fetch(`${API_BASE_URL}/users/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }).then(res => res.json()),
+  register: (data) => fetch(`${API_BASE_URL}/users/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }).then(res => res.json()),
+  logout: () => {
+    if (browser) {
+      localStorage.removeItem('user_token');
+      localStorage.removeItem('user_data');
+    }
+  },
+  getProfile: () => {
+    if (browser) {
+      const token = localStorage.getItem('user_token');
+      if (token) {
+        return api.get('/users/profile', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      }
+    }
+    return Promise.reject('No auth token');
+  },
+  updateProfile: (data) => {
+    if (browser) {
+      const token = localStorage.getItem('user_token');
+      if (token) {
+        return api.put('/users/profile', data, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      }
+    }
+    return Promise.reject('No auth token');
+  }
 };
 
 // ==================== HELPER FUNCTIONS ====================

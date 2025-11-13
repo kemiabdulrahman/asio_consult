@@ -30,7 +30,7 @@ class AdminService {
     }
 
     const token = jwt.sign(
-      { id: admin.id, email: admin.email },
+      { id: admin.id, email: admin.email, type: 'admin' },
       config.JWT_SECRET,
       { expiresIn: '24h' }
     );

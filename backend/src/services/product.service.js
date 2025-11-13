@@ -27,13 +27,23 @@ class ProductService {
 
     return await prisma.product.findMany({
       where,
-      orderBy
+      orderBy,
+      include: {
+        images: {
+          orderBy: { order: 'asc' }
+        }
+      }
     });
   }
 
   async getProductById(id) {
     const product = await prisma.product.findUnique({
-      where: { id }
+      where: { id },
+      include: {
+        images: {
+          orderBy: { order: 'asc' }
+        }
+      }
     });
 
     if (!product) {
@@ -140,7 +150,94 @@ class ProductService {
       where: {
         quantity: { lte: threshold }
       },
-      orderBy: { quantity: 'asc' }
+      orderBy: { quantity: 'asc' },
+      include: {
+        images: {
+          orderBy: { order: 'asc' }
+        }
+      }
+    });
+  }
+
+  // ==================== IMAGE MANAGEMENT ====================
+  
+  async addProductImages(productId, imageUrls) {
+    /**
+     * Add multiple images to a product
+     * imageUrls: Array of image URL strings
+     */
+    const product = await prisma.product.findUnique({
+      where: { id: productId },
+      include: { images: true }
+    });
+
+    if (!product) {
+      throw new Error('Product not found');
+    }
+
+    // Get the current max order to append new images
+    const maxOrder = product.images.length > 0 
+      ? Math.max(...product.images.map(img => img.order)) 
+      : -1;
+
+    const imagesToCreate = imageUrls.map((url, index) => ({
+      productId,
+      imageUrl: url,
+      order: maxOrder + index + 1
+    }));
+
+    return await prisma.productImage.createMany({
+      data: imagesToCreate
+    });
+  }
+
+  async deleteProductImage(imageId) {
+    /**
+     * Delete a specific product image by ID
+     */
+    const image = await prisma.productImage.findUnique({
+      where: { id: imageId }
+    });
+
+    if (!image) {
+      throw new Error('Image not found');
+    }
+
+    return await prisma.productImage.delete({
+      where: { id: imageId }
+    });
+  }
+
+  async reorderProductImages(productId, imageOrder) {
+    /**
+     * Reorder images for a product
+     * imageOrder: Array of { id, order } objects
+     */
+    const product = await prisma.product.findUnique({
+      where: { id: productId }
+    });
+
+    if (!product) {
+      throw new Error('Product not found');
+    }
+
+    const updates = imageOrder.map(({ id, order }) =>
+      prisma.productImage.update({
+        where: { id },
+        data: { order }
+      })
+    );
+
+    return await prisma.$transaction(updates);
+  }
+
+  async getProductImages(productId) {
+    /**
+     * Get all images for a product, ordered
+     */
+    return await prisma.productImage.findMany({
+      where: { productId },
+      orderBy: { order: 'asc' }
     });
   }
 }

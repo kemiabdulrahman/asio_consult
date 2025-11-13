@@ -6,7 +6,8 @@
   export let onSubmitSuccess = () => {};
   
   let loading = false;
-  let productImageInput;
+  let imagesInput;
+  let dragOver = false;
   
   let form = {
     name: '',
@@ -17,8 +18,8 @@
     specs: '{}',
     quantity: '',
     inStock: true,
-    image: null,
-    imagePreview: null
+    images: [],
+    imagePreviews: []
   };
 
   $: if (editingProduct) {
@@ -31,32 +32,91 @@
       specs: editingProduct.specs ? JSON.stringify(editingProduct.specs) : '{}',
       quantity: editingProduct.quantity?.toString() || '0',
       inStock: editingProduct.inStock,
-      image: null,
-      imagePreview: editingProduct.image || null
+      images: [],
+      imagePreviews: editingProduct.images?.map(img => ({
+        url: img.imageUrl,
+        isExisting: true,
+        id: img.id,
+        order: img.order
+      })) || []
     };
   }
 
   function handleImageChange(event) {
-    const file = event.target.files?.[0];
-    if (!file) return;
+    const files = event.target.files;
+    if (!files) return;
 
-    if (file.size > 5 * 1024 * 1024) {
-      toast.add('Image must be less than 5MB', 'error');
+    addFilesToImages(Array.from(files));
+  }
+
+  function addFilesToImages(files) {
+    const validFiles = [];
+
+    files.forEach(file => {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.add(`${file.name} is too large (max 5MB)`, 'error');
+        return;
+      }
+
+      if (!file.type.startsWith('image/')) {
+        toast.add(`${file.name} is not a valid image`, 'error');
+        return;
+      }
+
+      validFiles.push(file);
+    });
+
+    validFiles.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        form.images.push(file);
+        form.imagePreviews.push({
+          url: e.target?.result,
+          isExisting: false,
+          file: file
+        });
+        form.imagePreviews = form.imagePreviews;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function removeImage(index) {
+    form.imagePreviews = form.imagePreviews.filter((_, i) => i !== index);
+    form.images = form.images.filter((_, i) => i !== index);
+  }
+
+  function moveImage(index, direction) {
+    if ((direction === -1 && index === 0) || (direction === 1 && index === form.imagePreviews.length - 1)) {
       return;
     }
 
-    if (!file.type.startsWith('image/')) {
-      toast.add('Please upload a valid image file', 'error');
-      return;
+    const newIndex = index + direction;
+    [form.imagePreviews[index], form.imagePreviews[newIndex]] = [form.imagePreviews[newIndex], form.imagePreviews[index]];
+    [form.images[index], form.images[newIndex]] = [form.images[newIndex], form.images[index]];
+    
+    form.imagePreviews = form.imagePreviews;
+    form.images = form.images;
+  }
+
+  function handleDragOver(e) {
+    e.preventDefault();
+    dragOver = true;
+  }
+
+  function handleDragLeave(e) {
+    e.preventDefault();
+    dragOver = false;
+  }
+
+  function handleDrop(e) {
+    e.preventDefault();
+    dragOver = false;
+
+    const files = e.dataTransfer?.files;
+    if (files) {
+      addFilesToImages(Array.from(files));
     }
-
-    form.image = file;
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      form.imagePreview = e.target?.result;
-    };
-    reader.readAsDataURL(file);
   }
 
   async function handleSubmit() {
@@ -77,9 +137,12 @@
       formData.append('quantity', form.quantity || '0');
       formData.append('specs', form.specs);
       
-      if (form.image) {
-        formData.append('image', form.image);
-      }
+      // Add all new images
+      form.imagePreviews.forEach((preview, index) => {
+        if (!preview.isExisting && preview.file) {
+          formData.append('images', preview.file);
+        }
+      });
 
       if (editingProduct) {
         await productAPI.update(editingProduct.id, formData);
@@ -109,10 +172,10 @@
       specs: '{}',
       quantity: '',
       inStock: true,
-      image: null,
-      imagePreview: null
+      images: [],
+      imagePreviews: []
     };
-    if (productImageInput) productImageInput.value = '';
+    if (imagesInput) imagesInput.value = '';
     editingProduct = null;
   }
 </script>
@@ -232,33 +295,104 @@
       <p class="text-xs text-gray-500 mt-1">Valid JSON format required</p>
     </div>
 
+    <!-- Multi-Image Upload -->
     <div>
-      <label for="image" class="block text-sm font-medium text-gray-700 mb-2">
-        Product Image
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        Product Images (Drag & Drop or Click to Upload)
       </label>
-      <div class="flex items-center space-x-4">
-        <div class="flex-1">
-          <input
-            id="image"
-            type="file"
-            bind:this={productImageInput}
-            on:change={handleImageChange}
-            accept="image/*"
-            disabled={loading}
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-50"
-          />
-          <p class="text-xs text-gray-500 mt-1">Max: 5MB • JPG, PNG, WebP, GIF</p>
-        </div>
-        {#if form.imagePreview}
-          <div class="flex-shrink-0">
-            <img 
-              src={form.imagePreview} 
-              alt="Preview" 
-              class="w-20 h-20 object-cover rounded-lg border border-gray-300"
-            />
-          </div>
-        {/if}
+      
+      <div
+        on:dragover={handleDragOver}
+        on:dragleave={handleDragLeave}
+        on:drop={handleDrop}
+        class={`relative border-2 border-dashed rounded-lg p-6 text-center transition ${
+          dragOver ? 'border-primary-500 bg-primary-50' : 'border-gray-300'
+        }`}
+      >
+        <input
+          type="file"
+          bind:this={imagesInput}
+          on:change={handleImageChange}
+          accept="image/*"
+          multiple
+          disabled={loading}
+          class="hidden"
+        />
+        
+        <button
+          type="button"
+          on:click={() => imagesInput?.click()}
+          disabled={loading}
+          class="text-primary-600 hover:text-primary-700 font-medium disabled:opacity-50"
+        >
+          Click to upload
+        </button>
+        <p class="text-gray-500 text-sm mt-1">or drag and drop</p>
+        <p class="text-gray-400 text-xs mt-2">Max 5MB per image • JPG, PNG, WebP, GIF</p>
       </div>
+
+      <!-- Image Previews with Reorder -->
+      {#if form.imagePreviews.length > 0}
+        <div class="mt-4 space-y-2">
+          <p class="text-sm font-medium text-gray-700">Images ({form.imagePreviews.length})</p>
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {#each form.imagePreviews as preview, index (index)}
+              <div class="relative group">
+                <img
+                  src={preview.url}
+                  alt={`Preview ${index + 1}`}
+                  class="w-full h-24 object-cover rounded-lg border border-gray-200"
+                />
+                
+                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                <div class="absolute top-1 left-1 bg-black bg-opacity-70 text-white text-xs font-bold px-2 py-1 rounded">
+                  #{index + 1}
+                </div>
+
+                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 rounded-lg flex items-center justify-center gap-1 transition opacity-0 group-hover:opacity-100">
+                  {#if index > 0}
+                    <button
+                      type="button"
+                      on:click={() => moveImage(index, -1)}
+                      title="Move up"
+                      class="bg-white text-gray-800 p-1.5 rounded hover:bg-gray-200"
+                    >
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                      </svg>
+                    </button>
+                  {/if}
+
+                  {#if index < form.imagePreviews.length - 1}
+                    <button
+                      type="button"
+                      on:click={() => moveImage(index, 1)}
+                      title="Move down"
+                      class="bg-white text-gray-800 p-1.5 rounded hover:bg-gray-200"
+                    >
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                  {/if}
+
+                  <button
+                    type="button"
+                    on:click={() => removeImage(index)}
+                    title="Remove"
+                    class="bg-red-500 text-white p-1.5 rounded hover:bg-red-600"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            {/each}
+          </div>
+        </div>
+      {/if}
     </div>
 
     <div class="flex items-center">
@@ -283,6 +417,7 @@
         {#if loading}
           <svg class="animate-spin h-5 w-5 inline mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
         {/if}
         {editingProduct ? 'Update Product' : 'Add Product'}

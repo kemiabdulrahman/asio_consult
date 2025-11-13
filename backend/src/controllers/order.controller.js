@@ -3,6 +3,31 @@ const { successResponse, errorResponse } = require('../utils/response');
 const { v4: uuidv4 } = require('uuid');
 
 class OrderController {
+    static async getUserOrders(req, res) {
+      try {
+        const userId = req.user.id;
+        const orders = await OrderService.getOrdersByUser(userId);
+        return successResponse(res, 'User orders retrieved successfully', orders, 200);
+      } catch (error) {
+        console.error('Get user orders error:', error);
+        return errorResponse(res, 'Failed to fetch user orders', 500);
+      }
+    }
+
+    static async getUserOrderById(req, res) {
+      try {
+        const userId = req.user.id;
+        const orderId = req.params.id;
+        const order = await OrderService.getOrderById(orderId);
+        if (!order || order.userId !== userId) {
+          return errorResponse(res, 'Order not found or access denied', 404);
+        }
+        return successResponse(res, 'User order retrieved successfully', order, 200);
+      } catch (error) {
+        console.error('Get user order by id error:', error);
+        return errorResponse(res, 'Failed to fetch user order', 500);
+      }
+    }
   static async createOrder(req, res) {
     try {
       const {

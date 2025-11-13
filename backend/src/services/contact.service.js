@@ -31,9 +31,7 @@ class ContactService {
 
   async getAllMessages(filters = {}) {
     const { isRead, search } = filters;
-    
     const where = {};
-    
     if (isRead !== undefined) where.isRead = isRead === 'true' || isRead === true;
     if (search) {
       where.OR = [
@@ -42,10 +40,14 @@ class ContactService {
         { subject: { contains: search, mode: 'insensitive' } }
       ];
     }
-
+    // Add pagination
+    const take = filters.take ? parseInt(filters.take) : 20;
+    const skip = filters.skip ? parseInt(filters.skip) : 0;
     return await prisma.contactMessage.findMany({
       where,
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
+      take,
+      skip
     });
   }
 
