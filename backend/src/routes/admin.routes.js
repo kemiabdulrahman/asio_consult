@@ -8,7 +8,7 @@ const router = express.Router();
 router.post('/login', AdminController.login);
 
 // Protected routes
-router.get('/dashboard', authenticateAdmin, AdminController.getDashboardStats);
 router.post('/create', authenticateAdmin, AdminController.createAdmin);
+router.get('/dashboard', authenticateAdmin, AdminController.getDashboardStats);
 
 module.exports = router;

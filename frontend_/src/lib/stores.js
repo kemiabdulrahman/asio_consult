@@ -1,6 +1,7 @@
 import { writable } from 'svelte/store';
+import { browser } from '$app/environment';
 
-// Cart store
+// ==================== CART STORE ====================
 function createCartStore() {
   const { subscribe, set, update } = writable([]);
 
@@ -30,18 +31,34 @@ function createCartStore() {
   };
 }
 
-// Auth store
+// ==================== AUTH STORE ====================
 function createAuthStore() {
-  const { subscribe, set } = writable({
+  const initialState = {
     isAuthenticated: false,
     admin: null,
     token: null
-  });
+  };
+
+  const { subscribe, set } = writable(initialState);
+
+  // Check for existing token on init
+  if (browser) {
+    const token = localStorage.getItem('admin_token');
+    if (token) {
+      set({
+        isAuthenticated: true,
+        admin: null,
+        token
+      });
+    }
+  }
 
   return {
     subscribe,
     login: (admin, token) => {
-      localStorage.setItem('admin_token', token);
+      if (browser) {
+        localStorage.setItem('admin_token', token);
+      }
       set({
         isAuthenticated: true,
         admin,
@@ -49,30 +66,38 @@ function createAuthStore() {
       });
     },
     logout: () => {
-      localStorage.removeItem('admin_token');
-      set({
-        isAuthenticated: false,
-        admin: null,
-        token: null
-      });
+      if (browser) {
+        localStorage.removeItem('admin_token');
+      }
+      set(initialState);
     },
     checkAuth: () => {
-      const token = localStorage.getItem('admin_token');
-      if (token) {
-        set({
-          isAuthenticated: true,
-          admin: null, // Will be populated when needed
-          token
-        });
+      if (browser) {
+        const token = localStorage.getItem('admin_token');
+        if (token) {
+          set({
+            isAuthenticated: true,
+            admin: null,
+            token
+          });
+          return true;
+        }
       }
+      return false;
+    },
+    updateAdmin: (admin) => {
+      set(state => ({
+        ...state,
+        admin
+      }));
     }
   };
 }
 
-// Loading store
+// ==================== LOADING STORE ====================
 export const loading = writable(false);
 
-// Toast notifications store
+// ==================== TOAST NOTIFICATIONS STORE ====================
 function createToastStore() {
   const { subscribe, update } = writable([]);
 
@@ -84,16 +109,49 @@ function createToastStore() {
       
       update(toasts => [...toasts, toast]);
       
-      setTimeout(() => {
-        update(toasts => toasts.filter(t => t.id !== id));
-      }, duration);
+      if (duration > 0) {
+        setTimeout(() => {
+          update(toasts => toasts.filter(t => t.id !== id));
+        }, duration);
+      }
+      
+      return id;
     },
     remove: (id) => {
       update(toasts => toasts.filter(t => t.id !== id));
+    },
+    clear: () => {
+      update(() => []);
     }
   };
 }
 
+// ==================== DASHBOARD DATA STORE ====================
+function createDashboardStore() {
+  const initialState = {
+    stats: null,
+    products: [],
+    services: [],
+    messages: [],
+    orders: []
+  };
+
+  const { subscribe, set, update } = writable(initialState);
+
+  return {
+    subscribe,
+    setStats: (stats) => update(state => ({ ...state, stats })),
+    setProducts: (products) => update(state => ({ ...state, products })),
+    setServices: (services) => update(state => ({ ...state, services })),
+    setMessages: (messages) => update(state => ({ ...state, messages })),
+    setOrders: (orders) => update(state => ({ ...state, orders })),
+    setAll: (data) => set(data),
+    reset: () => set(initialState)
+  };
+}
+
+// ==================== EXPORT STORES ====================
 export const cart = createCartStore();
 export const auth = createAuthStore();
 export const toast = createToastStore();
+export const dashboard = createDashboardStore();

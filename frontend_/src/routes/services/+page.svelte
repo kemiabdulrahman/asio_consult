@@ -1,47 +1,46 @@
 <script>
   import { onMount } from 'svelte';
   import { serviceAPI } from '../../lib/api.js';
+  import { handleAPIError } from '../../lib/api.js';
   import { toast } from '../../lib/stores.js';
   import ServiceCard from '../../components/ServiceCard.svelte';
 
   let services = [];
   let loading = true;
+  let error = null;
 
   onMount(async () => {
     try {
       const response = await serviceAPI.getAll();
-      // Parse features which may be stored as JSON strings from the backend
-      services = response.data.data.map(s => {
-        try {
-          return {
-            ...s,
-            features: typeof s.features === 'string' && s.features.trim().length ? JSON.parse(s.features) : Array.isArray(s.features) ? s.features : []
-          };
-        } catch (e) {
-          console.warn('Failed to parse features for service', s.name, e);
-          return { ...s, features: [] };
-        }
-      });
-    } catch (error) {
-      console.error('Error loading services:', error);
-      toast.add('Failed to load services', 'error');
+      
+      services = response.data.data.map(s => ({
+        ...s,
+        features: Array.isArray(s.features) ? s.features : s.features ? [s.features] : []
+      }));
+      
+      console.log('Services loaded:', services);
+    } catch (err) {
+      console.error('Error loading services:', err);
+      const apiError = handleAPIError(err);
+      error = apiError.message;
+      toast.add(apiError.message, 'error');
     } finally {
       loading = false;
     }
   });
 
   const serviceCategories = {
-    training: {
+    TRAINING: {
       title: 'ICT Training & Education',
       icon: '🎓',
       description: 'Professional ICT training programs for individuals and institutions'
     },
-    software: {
+    SOFTWARE: {
       title: 'Educational Software',
       icon: '💻',
       description: 'Custom educational software solutions and school management systems'
     },
-    consulting: {
+    CONSULTING: {
       title: 'ICT Consultancy',
       icon: '🔧',
       description: 'Expert consultancy services for educational technology implementation'
@@ -129,10 +128,23 @@
       </div>
     </div>
 
+    <!-- Error State -->
+    {#if error}
+      <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-8">
+        <p class="text-red-800">
+          <strong>Error:</strong> {error}
+        </p>
+      </div>
+    {/if}
+
     <!-- Service Categories -->
     {#if loading}
       <div class="flex justify-center py-12">
         <div class="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600"></div>
+      </div>
+    {:else if services.length === 0}
+      <div class="bg-gray-100 rounded-lg p-8 text-center">
+        <p class="text-gray-600 text-lg">No services available at the moment.</p>
       </div>
     {:else}
       {#each Object.entries(serviceCategories) as [categoryKey, categoryInfo]}

@@ -1,5 +1,6 @@
 <script>
   import { onMount } from 'svelte';
+  import { orderAPI, handleAPIError } from '../../lib/api.js';
   import { toast } from '../../lib/stores.js';
 
   let orders = [];
@@ -13,17 +14,12 @@
   async function fetchOrders() {
     isLoading = true;
     try {
-      const response = await fetch('/api/orders');
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch orders');
-      }
-
-      const data = await response.json();
-      orders = data.data || [];
+      const response = await orderAPI.getAll();
+      orders = response.data.data || [];
     } catch (error) {
       console.error('Error fetching orders:', error);
-      toast.add('Error loading orders: ' + error.message, 'error', 3000);
+      const apiError = handleAPIError(error);
+      toast.add('Error loading orders: ' + apiError.message, 'error', 3000);
       orders = [];
     } finally {
       isLoading = false;
@@ -34,18 +30,24 @@
     if (filterStatus === 'all') {
       return orders;
     }
-    return orders.filter(order => order.status === filterStatus);
+    // Fixed: Use orderStatus instead of status, and uppercase enum values
+    return orders.filter(order => order.orderStatus === filterStatus);
   }
 
   function getStatusBadgeClass(status) {
+    // Fixed: Use uppercase enum values to match backend
     switch (status) {
-      case 'pending':
+      case 'PENDING':
         return 'bg-yellow-100 text-yellow-800';
-      case 'confirmed':
+      case 'CONFIRMED':
         return 'bg-blue-100 text-blue-800';
-      case 'delivered':
+      case 'PROCESSING':
+        return 'bg-purple-100 text-purple-800';
+      case 'SHIPPED':
+        return 'bg-indigo-100 text-indigo-800';
+      case 'DELIVERED':
         return 'bg-green-100 text-green-800';
-      case 'cancelled':
+      case 'CANCELLED':
         return 'bg-red-100 text-red-800';
       default:
         return 'bg-gray-100 text-gray-800';
@@ -67,6 +69,7 @@
     }
     return 0;
   }
+
 </script>
 
 <svelte:head>
@@ -95,40 +98,52 @@
         All Orders ({orders.length})
       </button>
       <button
-        on:click={() => filterStatus = 'pending'}
+        on:click={() => filterStatus = 'PENDING'}
         class="px-4 py-2 rounded-lg font-medium transition-colors"
-        class:bg-yellow-100={filterStatus === 'pending'}
-        class:text-yellow-800={filterStatus === 'pending'}
-        class:bg-white={filterStatus !== 'pending'}
-        class:text-gray-700={filterStatus !== 'pending'}
-        class:border={filterStatus !== 'pending'}
-        class:border-gray-300={filterStatus !== 'pending'}
+        class:bg-yellow-100={filterStatus === 'PENDING'}
+        class:text-yellow-800={filterStatus === 'PENDING'}
+        class:bg-white={filterStatus !== 'PENDING'}
+        class:text-gray-700={filterStatus !== 'PENDING'}
+        class:border={filterStatus !== 'PENDING'}
+        class:border-gray-300={filterStatus !== 'PENDING'}
       >
-        Pending ({orders.filter(o => o.status === 'pending').length})
+        Pending ({orders.filter(o => o.orderStatus === 'PENDING').length})
       </button>
       <button
-        on:click={() => filterStatus = 'confirmed'}
+        on:click={() => filterStatus = 'CONFIRMED'}
         class="px-4 py-2 rounded-lg font-medium transition-colors"
-        class:bg-blue-100={filterStatus === 'confirmed'}
-        class:text-blue-800={filterStatus === 'confirmed'}
-        class:bg-white={filterStatus !== 'confirmed'}
-        class:text-gray-700={filterStatus !== 'confirmed'}
-        class:border={filterStatus !== 'confirmed'}
-        class:border-gray-300={filterStatus !== 'confirmed'}
+        class:bg-blue-100={filterStatus === 'CONFIRMED'}
+        class:text-blue-800={filterStatus === 'CONFIRMED'}
+        class:bg-white={filterStatus !== 'CONFIRMED'}
+        class:text-gray-700={filterStatus !== 'CONFIRMED'}
+        class:border={filterStatus !== 'CONFIRMED'}
+        class:border-gray-300={filterStatus !== 'CONFIRMED'}
       >
-        Confirmed ({orders.filter(o => o.status === 'confirmed').length})
+        Confirmed ({orders.filter(o => o.orderStatus === 'CONFIRMED').length})
       </button>
       <button
-        on:click={() => filterStatus = 'delivered'}
+        on:click={() => filterStatus = 'SHIPPED'}
         class="px-4 py-2 rounded-lg font-medium transition-colors"
-        class:bg-green-100={filterStatus === 'delivered'}
-        class:text-green-800={filterStatus === 'delivered'}
-        class:bg-white={filterStatus !== 'delivered'}
-        class:text-gray-700={filterStatus !== 'delivered'}
-        class:border={filterStatus !== 'delivered'}
-        class:border-gray-300={filterStatus !== 'delivered'}
+        class:bg-indigo-100={filterStatus === 'SHIPPED'}
+        class:text-indigo-800={filterStatus === 'SHIPPED'}
+        class:bg-white={filterStatus !== 'SHIPPED'}
+        class:text-gray-700={filterStatus !== 'SHIPPED'}
+        class:border={filterStatus !== 'SHIPPED'}
+        class:border-gray-300={filterStatus !== 'SHIPPED'}
       >
-        Delivered ({orders.filter(o => o.status === 'delivered').length})
+        Shipped ({orders.filter(o => o.orderStatus === 'SHIPPED').length})
+      </button>
+      <button
+        on:click={() => filterStatus = 'DELIVERED'}
+        class="px-4 py-2 rounded-lg font-medium transition-colors"
+        class:bg-green-100={filterStatus === 'DELIVERED'}
+        class:text-green-800={filterStatus === 'DELIVERED'}
+        class:bg-white={filterStatus !== 'DELIVERED'}
+        class:text-gray-700={filterStatus !== 'DELIVERED'}
+        class:border={filterStatus !== 'DELIVERED'}
+        class:border-gray-300={filterStatus !== 'DELIVERED'}
+      >
+        Delivered ({orders.filter(o => o.orderStatus === 'DELIVERED').length})
       </button>
     </div>
 
@@ -154,14 +169,13 @@
         {#each getFilteredOrders() as order (order.id)}
           <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
             <div class="p-6">
-              <!-- Order Header -->
-              <div class="flex justify-between items-start mb-4">
+            <div class="flex justify-between items-start mb-4">
                 <div>
-                  <h3 class="text-lg font-semibold text-gray-900">Order #{order.id.slice(0, 8)}</h3>
+                  <h3 class="text-lg font-semibold text-gray-900">Order #{order.orderNumber}</h3>
                   <p class="text-sm text-gray-600">{formatDate(order.createdAt)}</p>
                 </div>
-                <span class="px-3 py-1 rounded-full text-sm font-medium {getStatusBadgeClass(order.status)}">
-                  {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                <span class="px-3 py-1 rounded-full text-sm font-medium {getStatusBadgeClass(order.orderStatus)}">
+                  {order.orderStatus}
                 </span>
               </div>
 
@@ -201,7 +215,7 @@
                             <p class="text-gray-600 text-xs">Qty: {item.quantity || 1}</p>
                           </div>
                         </div>
-                        <p class="text-gray-900 font-medium">PKR {(item.price * (item.quantity || 1)).toFixed(2)}</p>
+                        <p class="text-gray-900 font-medium">₦{((item.price * (item.quantity || 1)) / 100).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                       </div>
                     {/each}
                   {:else}
@@ -214,7 +228,7 @@
               <div class="flex justify-end items-center gap-8 pt-4 border-t border-gray-200">
                 <div>
                   <p class="text-sm text-gray-600 mb-1">Order Total</p>
-                  <p class="text-2xl font-bold text-primary-600">PKR {order.total.toFixed(2)}</p>
+                  <p class="text-2xl font-bold text-primary-600">₦{(order.total / 100).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                 </div>
               </div>
             </div>

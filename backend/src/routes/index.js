@@ -7,6 +7,7 @@ const orderRoutes = require('./order.routes');
 
 const router = express.Router();
 
+// API Routes
 router.use('/products', productRoutes);
 router.use('/services', serviceRoutes);
 router.use('/contact', contactRoutes);

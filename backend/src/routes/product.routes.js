@@ -39,11 +39,14 @@ const upload = multer({
 // Public routes
 router.get('/', ProductController.getProducts);
 router.get('/category/:category', ProductController.getProductsByCategory);
+router.get('/brand/:brand', ProductController.getProductsByBrand);
 router.get('/:id', ProductController.getProduct);
 
 // Admin routes
 router.post('/', authenticateAdmin, upload.single('image'), ProductController.createProduct);
 router.put('/:id', authenticateAdmin, upload.single('image'), ProductController.updateProduct);
+router.patch('/:id/quantity', authenticateAdmin, ProductController.updateProductQuantity);
+router.get('/admin/low-stock', authenticateAdmin, ProductController.getLowStockProducts);
 router.delete('/:id', authenticateAdmin, ProductController.deleteProduct);
 
 module.exports = router;

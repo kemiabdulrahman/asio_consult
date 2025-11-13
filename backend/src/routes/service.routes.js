@@ -6,11 +6,14 @@ const router = express.Router();
 
 // Public routes
 router.get('/', ServiceController.getServices);
+router.get('/category/:category', ServiceController.getServicesByCategory);
 router.get('/:id', ServiceController.getService);
 
 // Admin routes
 router.post('/', authenticateAdmin, ServiceController.createService);
 router.put('/:id', authenticateAdmin, ServiceController.updateService);
+router.patch('/:id/activate', authenticateAdmin, ServiceController.activateService);
+router.patch('/:id/deactivate', authenticateAdmin, ServiceController.deactivateService);
 router.delete('/:id', authenticateAdmin, ServiceController.deleteService);
 
 module.exports = router;

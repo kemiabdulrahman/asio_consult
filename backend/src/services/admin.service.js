@@ -46,18 +46,31 @@ class AdminService {
   }
 
   async getDashboardStats() {
-    const [productCount, serviceCount, messageCount, orderCount] = await Promise.all([
+    const [productCount, serviceCount, messageCount, orderCount, unreadMessages] = await Promise.all([
       prisma.product.count(),
       prisma.service.count({ where: { isActive: true } }),
       prisma.contactMessage.count(),
-      prisma.order.count()
+      prisma.order.count(),
+      prisma.contactMessage.count({ where: { isRead: false } })
     ]);
+
+    const pendingOrders = await prisma.order.count({
+      where: { orderStatus: 'PENDING' }
+    });
+
+    const totalRevenue = await prisma.order.aggregate({
+      where: { paymentStatus: 'COMPLETED' },
+      _sum: { total: true }
+    });
 
     return {
       products: productCount,
       services: serviceCount,
       messages: messageCount,
-      orders: orderCount
+      unreadMessages,
+      orders: orderCount,
+      pendingOrders,
+      totalRevenue: totalRevenue._sum.total || 0
     };
   }
 }

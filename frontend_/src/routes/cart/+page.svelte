@@ -1,12 +1,26 @@
 <script>
   import { cart, toast } from '../../lib/stores.js';
+  import { orderAPI, handleAPIError } from '../../lib/api.js';
   import { goto } from '$app/navigation';
 
   let cartItems = [];
-  let customerName = '';
-  let customerEmail = '';
-  let customerPhone = '';
   let isSubmitting = false;
+
+  let customerInfo = {
+    name: '',
+    email: '',
+    phone: ''
+  };
+
+  let shippingAddress = {
+    street: '',
+    city: '',
+    state: '',
+    zipCode: '',
+    country: 'Nigeria'
+  };
+
+  let paymentMethod = 'cash_on_delivery';
 
   cart.subscribe(items => {
     cartItems = items;
@@ -25,13 +39,28 @@
     toast.add('Item removed from cart', 'info', 2000);
   }
 
-  function calculateTotal() {
+  function calculateSubtotal() {
     return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
   }
 
+  function calculateTotal() {
+    const subtotal = calculateSubtotal();
+    const shippingCost = 0; // Can be calculated based on location
+    const tax = 0; // Can be calculated based on items
+    return subtotal + shippingCost + tax;
+  }
+
   async function placeOrder() {
-    if (!customerName.trim() || !customerEmail.trim() || !customerPhone.trim()) {
+    // Validate customer info
+    if (!customerInfo.name.trim() || !customerInfo.email.trim() || !customerInfo.phone.trim()) {
       toast.add('Please fill in all customer information', 'error', 3000);
+      return;
+    }
+
+    // Validate shipping address
+    if (!shippingAddress.street.trim() || !shippingAddress.city.trim() || 
+        !shippingAddress.state.trim() || !shippingAddress.zipCode.trim()) {
+      toast.add('Please fill in all shipping address fields', 'error', 3000);
       return;
     }
 
@@ -43,40 +72,48 @@
     isSubmitting = true;
 
     try {
-      const response = await fetch('/api/orders', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          customerName,
-          customerEmail,
-          customerPhone,
-          items: cartItems,
-          total: calculateTotal(),
-          status: 'pending'
-        })
-      });
+      const subtotal = calculateSubtotal();
+      const shippingCost = 0;
+      const tax = 0;
+      const total = calculateTotal();
 
-      if (!response.ok) {
-        throw new Error('Failed to create order');
-      }
+      // Create order data matching backend schema
+      const orderData = {
+        customerName: customerInfo.name,
+        customerEmail: customerInfo.email,
+        customerPhone: customerInfo.phone,
+        shippingAddressStreet: shippingAddress.street,
+        shippingAddressCity: shippingAddress.city,
+        shippingAddressState: shippingAddress.state,
+        shippingAddressZipCode: shippingAddress.zipCode,
+        shippingAddressCountry: shippingAddress.country,
+        paymentMethod: paymentMethod,
+        items: cartItems,
+        subtotal: subtotal,
+        shippingCost: shippingCost,
+        tax: tax,
+        total: total
+        // Don't send orderStatus - backend sets it to PENDING automatically
+      };
 
-      const data = await response.json();
-      toast.add('Order placed successfully! Order ID: ' + data.data.id, 'success', 4000);
+      const response = await orderAPI.create(orderData);
+      const order = response.data.data;
+
+      toast.add('Order placed successfully! Order #' + order.orderNumber, 'success', 4000);
       
-      // Clear cart and redirect
+      // Clear cart and reset form
       cart.clear();
-      customerName = '';
-      customerEmail = '';
-      customerPhone = '';
+      customerInfo = { name: '', email: '', phone: '' };
+      shippingAddress = { street: '', city: '', state: '', zipCode: '', country: 'Nigeria' };
+      paymentMethod = 'cash_on_delivery';
       
       setTimeout(() => {
-        goto('/orders');
+        goto(`/orders`);
       }, 2000);
     } catch (error) {
       console.error('Error placing order:', error);
-      toast.add('Error placing order: ' + error.message, 'error', 3000);
+      const apiError = handleAPIError(error);
+      toast.add('Error placing order: ' + apiError.message, 'error', 3000);
     } finally {
       isSubmitting = false;
     }
@@ -146,7 +183,7 @@
                       </div>
                     </td>
                     <td class="px-4 py-3 text-center text-gray-900">
-                      PKR {item.price?.toFixed(2)}
+                      ₦{(item.price / 100).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </td>
                     <td class="px-4 py-3">
                       <div class="flex items-center justify-center gap-2">
@@ -172,7 +209,7 @@
                       </div>
                     </td>
                     <td class="px-4 py-3 text-center font-semibold text-gray-900">
-                      PKR {(item.price * item.quantity)?.toFixed(2)}
+                      ₦{((item.price * item.quantity) / 100).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </td>
                     <td class="px-4 py-3 text-center">
                       <button 
@@ -207,20 +244,21 @@
             <div class="mb-6 pb-6 border-b">
               <div class="flex justify-between mb-2">
                 <span class="text-gray-600">Subtotal</span>
-                <span class="text-gray-900">PKR {calculateTotal().toFixed(2)}</span>
+                <span class="text-gray-900">₦{(calculateSubtotal() / 100).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
               <div class="flex justify-between mb-2">
                 <span class="text-gray-600">Shipping</span>
-                <span class="text-gray-900">PKR 0.00</span>
+                <span class="text-gray-900">₦0.00</span>
               </div>
               <div class="flex justify-between text-lg font-bold">
                 <span>Total</span>
-                <span class="text-primary-600">PKR {calculateTotal().toFixed(2)}</span>
+                <span class="text-primary-600">₦{(calculateTotal() / 100).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
             </div>
 
             <!-- Customer Information -->
             <div class="space-y-4 mb-6">
+              <h3 class="font-semibold text-gray-900 text-sm">Customer Information</h3>
               <div>
                 <label for="name" class="block text-sm font-medium text-gray-700 mb-1">
                   Full Name *
@@ -228,7 +266,7 @@
                 <input 
                   type="text"
                   id="name"
-                  bind:value={customerName}
+                  bind:value={customerInfo.name}
                   placeholder="Enter your full name"
                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
@@ -241,7 +279,7 @@
                 <input 
                   type="email"
                   id="email"
-                  bind:value={customerEmail}
+                  bind:value={customerInfo.email}
                   placeholder="Enter your email"
                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
@@ -254,10 +292,101 @@
                 <input 
                   type="tel"
                   id="phone"
-                  bind:value={customerPhone}
+                  bind:value={customerInfo.phone}
                   placeholder="Enter your phone number"
                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
+              </div>
+            </div>
+
+            <!-- Shipping Address -->
+            <div class="space-y-4 mb-6 pb-6 border-b">
+              <h3 class="font-semibold text-gray-900 text-sm">Shipping Address</h3>
+              <div>
+                <label for="street" class="block text-sm font-medium text-gray-700 mb-1">
+                  Street Address *
+                </label>
+                <input 
+                  type="text"
+                  id="street"
+                  bind:value={shippingAddress.street}
+                  placeholder="Enter street address"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                />
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label for="city" class="block text-sm font-medium text-gray-700 mb-1">
+                    City *
+                  </label>
+                  <input 
+                    type="text"
+                    id="city"
+                    bind:value={shippingAddress.city}
+                    placeholder="e.g., Ibadan"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  />
+                </div>
+                <div>
+                  <label for="state" class="block text-sm font-medium text-gray-700 mb-1">
+                    State *
+                  </label>
+                  <input 
+                    type="text"
+                    id="state"
+                    bind:value={shippingAddress.state}
+                    placeholder="e.g., Oyo"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label for="zipCode" class="block text-sm font-medium text-gray-700 mb-1">
+                  Zip Code *
+                </label>
+                <input 
+                  type="text"
+                  id="zipCode"
+                  bind:value={shippingAddress.zipCode}
+                  placeholder="Enter zip code"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                />
+              </div>
+            </div>
+
+            <!-- Payment Method -->
+            <div class="space-y-4 mb-6">
+              <h3 class="font-semibold text-gray-900 text-sm">Payment Method</h3>
+              <div class="space-y-2">
+                <label class="flex items-center">
+                  <input 
+                    type="radio"
+                    bind:group={paymentMethod}
+                    value="cash_on_delivery"
+                    class="w-4 h-4 text-primary-600"
+                  />
+                  <span class="ml-2 text-gray-700">Cash on Delivery</span>
+                </label>
+                <label class="flex items-center">
+                  <input 
+                    type="radio"
+                    bind:group={paymentMethod}
+                    value="bank_transfer"
+                    class="w-4 h-4 text-primary-600"
+                  />
+                  <span class="ml-2 text-gray-700">Bank Transfer</span>
+                </label>
+                <label class="flex items-center">
+                  <input 
+                    type="radio"
+                    bind:group={paymentMethod}
+                    value="card"
+                    class="w-4 h-4 text-primary-600"
+                  />
+                  <span class="ml-2 text-gray-700">Card Payment</span>
+                </label>
               </div>
             </div>
 
