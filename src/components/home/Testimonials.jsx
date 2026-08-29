@@ -5,22 +5,22 @@ const testimonials = [
   {
     name: 'Proprietor, Chrisdem Nursery & Primary School',
     location: 'Ibadan',
-    text: 'ReportTube has completely transformed how we prepare term reports. What used to take us several days of manual work now takes just a few hours. Our teachers love it and the parents are impressed with the professional reports.',
-    product: 'ReportTube',
+    text: 'Reportube has completely transformed how we prepare term reports. What used to take us several days of manual work now takes just a few hours. Our teachers love it and the parents are impressed with the professional reports.',
+    product: 'Reportube',
     rating: 5
   },
   {
     name: 'Proprietor, As Sabbaq Model School',
     location: 'Ibadan',
-    text: 'We switched to ReportTube and it has been a game-changer for our school. The Google Sheets integration means we don\'t need any special software — it just works. We also use BillTube for our fee management. Highly recommend Asio Consult!',
-    product: 'ReportTube & BillTube',
+    text: 'We switched to Reportube and it has been a game-changer for our school. The Google Sheets integration means we don\'t need any special software — it just works. We also use FinanceTube for our billing. Highly recommend Asio Consult!',
+    product: 'Reportube & FinanceTube',
     rating: 5
   },
   {
     name: 'Proprietor, Al-Furqan Islamic School',
     location: 'Ibadan',
-    text: 'As an Islamic school, we needed something flexible that could handle our unique grading system. ReportTube handled it perfectly. The support team was very helpful in setting everything up for us. Thank you, Asio Consult!',
-    product: 'ReportTube',
+    text: 'As an Islamic school, we needed something flexible that could handle our unique grading system. Reportube handled it perfectly. The support team was very helpful in setting everything up for us. Thank you, Asio Consult!',
+    product: 'Reportube',
     rating: 5
   }
 ]

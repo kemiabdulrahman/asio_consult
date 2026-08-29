@@ -1,10 +1,10 @@
-import { billTube } from '../data/products'
+import { financeTube } from '../data/products'
 import SectionHeading from '../components/ui/SectionHeading'
 import Button from '../components/ui/Button'
 import { FaCheck, FaStar, FaArrowRight } from 'react-icons/fa'
 
-export default function BillTube() {
-  const product = billTube
+export default function FinanceTube() {
+  const product = financeTube
 
   return (
     <div className="py-16 bg-gray-50 min-h-screen">
@@ -24,7 +24,7 @@ export default function BillTube() {
         <div className="mb-20">
           <SectionHeading
             title="Powerful Features"
-            subtitle="Everything you need to manage your school's billing efficiently"
+            subtitle="Everything you need to automate your school's billing"
           />
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
@@ -44,13 +44,13 @@ export default function BillTube() {
         <div className="mb-20 bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-gray-100">
           <SectionHeading
             title="How It Works"
-            subtitle="Streamline your billing in three simple steps"
+            subtitle="Automate your billing in three simple steps"
           />
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { step: '01', title: 'Configure', description: 'Set up fee structures and payment methods' },
-              { step: '02', title: 'Invoice', description: 'Generate professional invoices automatically' },
+              { step: '01', title: 'Configure', description: 'Set up fee structures for your classes and terms' },
+              { step: '02', title: 'Generate & Deliver', description: 'Generate next-term bills and deliver them to parents\' email inboxes automatically' },
               { step: '03', title: 'Track', description: 'Monitor payments and send automated reminders' }
             ].map((item, index) => (
               <div key={index} className="text-center group">
@@ -101,7 +101,7 @@ export default function BillTube() {
                 </ul>
 
                 <a
-                  href={`https://wa.me/2348026295718?text=Hi, I'm interested in the ${plan.name} plan for BillTube (₦${plan.price} one-time payment)`}
+                  href={`https://wa.me/2348026295718?text=Hi, I'm interested in FinanceTube (${plan.name} — ₦${plan.price} one-time payment)`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`block text-center py-3 rounded-xl font-semibold transition-colors ${
@@ -149,12 +149,12 @@ export default function BillTube() {
           <div className="absolute inset-0 opacity-[0.07]" aria-hidden="true"
             style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '28px 28px' }} />
           <div className="relative">
-          <h2 className="text-3xl font-bold tracking-tight mb-4">Ready to Simplify Your School Billing?</h2>
+          <h2 className="text-3xl font-bold tracking-tight mb-4">Ready to Automate Your School Billing?</h2>
           <p className="text-white/85 mb-6 max-w-2xl mx-auto">
-            Join schools already using BillTube to manage fees and payments efficiently.
+            Join schools already using FinanceTube to generate next-term bills and deliver them to parents automatically.
           </p>
           <Button
-            href="https://wa.me/2348026295718?text=Hi, I'd like to try BillTube for my school"
+            href="https://wa.me/2348026295718?text=Hi, I'd like to try FinanceTube for my school"
             variant="white"
             size="lg"
           >

@@ -12,23 +12,23 @@ const features = [
   },
   {
     icon: FaFileAlt,
-    title: 'ReportTube',
-    description: 'Automate school report generation. Built on Google Workspace — save hours of manual work with smart templates and auto grading.',
+    title: 'Reportube',
+    description: 'Automate result processing and report delivery to parents. Build exam questions with AI and convert them to CBT — all on Google Workspace.',
     to: '/reporttube',
     color: 'from-green-500 to-green-600'
   },
   {
     icon: FaReceipt,
-    title: 'BillTube',
-    description: 'Simplified school billing and invoicing. Manage fees, track payments, and send automated reminders — one-time payment.',
-    to: '/billtube',
+    title: 'FinanceTube',
+    description: 'Automated school billing. Generate next-term bills and deliver them to parents\' email inboxes — one-time payment.',
+    to: '/financetube',
     color: 'from-purple-500 to-purple-600'
   },
   {
     icon: FaClipboardCheck,
-    title: 'CBT Tube',
-    description: 'Computer-based testing on Google Workspace. Import questions via Google Forms, auto-mark exams, and get instant results.',
-    to: '/cbttube',
+    title: 'Entrance Exams (CBT)',
+    description: 'AI-powered entrance examinations. Create questions with AI, run CBT, and deliver instant results and admission letters automatically.',
+    to: '/entrance-exams',
     color: 'from-orange-500 to-red-500'
   },
   {

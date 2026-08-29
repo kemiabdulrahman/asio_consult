@@ -1,199 +1,110 @@
-export const reportTube = {
-  name: 'ReportTube',
-  tagline: 'Automate School Reports — Built on Google Workspace',
-  description: 'ReportTube is a Google Workspace add-on that streamlines and automates school report generation. It runs directly inside Google Sheets — no software to install, no servers to maintain. Just install, configure, and generate professional reports in minutes.',
-  googleIntegration: 'Works with your existing Google account. Install from the Google Workspace Marketplace and start generating reports immediately — right inside Google Sheets.',
+export const reportube = {
+  name: 'Reportube + CBT Integration',
+  tagline: 'Complete School Result Processing & CBT — Powered by Google Workspace',
+  description: 'Transform school result processing with a complete Workspace-powered solution. Generate results, send personalized report sheets directly to parents\' email addresses with a single click, create examination questions using AI, and instantly convert them into CBT. Save time, reduce errors, and deliver a modern digital experience.',
+  googleIntegration: 'Works with your existing Google account. Runs entirely inside Google Workspace — generate results and send personalized report sheets to parents\' email addresses with a single click, create examination questions using AI, and instantly convert them into a functional CBT platform.',
   features: [
     {
-      title: 'Built on Google Workspace',
-      description: 'Runs inside Google Sheets and Docs — no extra software to install. Works in your browser on any device.'
+      title: 'Report Delivery to Parents',
+      description: 'Send personalized report sheets directly to parents\' email addresses with a single click — no printing or manual distribution.'
     },
     {
-      title: 'Smart Templates',
-      description: 'Create and customize report templates for different class levels and subjects using familiar Google Sheets.'
+      title: 'AI Question Builder',
+      description: 'Create examination questions effortlessly using AI — build complete question papers in minutes.'
     },
     {
-      title: 'Auto Grading',
-      description: 'Automatic grade calculations based on your custom grading system, powered by Google Sheets formulas.'
+      title: 'One-Click CBT Conversion',
+      description: 'Instantly convert your questions into a fully functional CBT platform for computer-based testing.'
     },
     {
-      title: 'Bulk Generation',
-      description: 'Generate reports for entire classes or schools in minutes, not hours.'
+      title: 'Auto Result Generation',
+      description: 'Generate results for entire classes automatically — accurate, consistent, and free from manual errors.'
     },
     {
-      title: 'Export & Share',
-      description: 'Export to PDF, print directly, or share via Google Docs and email to parents instantly.'
+      title: 'Smart Report Templates',
+      description: 'Customizable report templates for different class levels and subjects using familiar Google Sheets.'
     },
     {
       title: 'Student Database',
-      description: 'Maintain comprehensive student records in Google Sheets with easy search, filter, and sorting.'
+      description: 'Comprehensive student records with search, filter, and sorting — maintained right inside Google Workspace.'
     }
   ],
   pricing: [
     {
-      name: 'Basic',
-      price: '50,000',
-      period: 'one-time',
-      features: [
-        'Up to 100 students',
-        '3 report templates',
-        'PDF export',
-        'Google Sheets integration',
-        'Email support'
+      name: 'Reportube',
+      description: 'Automated result processing & personalized report delivery to parents',
+      popular: false,
+      prices: [
+        { label: 'Primary', price: '150,000' },
+        { label: 'College', price: '200,000' },
+        { label: 'Primary & College', price: '300,000' }
       ]
     },
     {
-      name: 'Professional',
-      price: '150,000',
-      period: 'one-time',
-      features: [
-        'Up to 500 students',
-        'Unlimited templates',
-        'PDF & Google Docs export',
-        'Advanced analytics',
-        'Priority support',
-        'Custom branding'
-      ],
-      popular: true
-    },
-    {
-      name: 'Enterprise',
-      price: '300,000',
-      period: 'one-time',
-      features: [
-        'Unlimited students',
-        'Unlimited templates',
-        'All export options',
-        'Full analytics suite',
-        '24/7 support',
-        'Custom branding',
-        'Multi-school management',
-        'Free lifetime updates'
+      name: 'Reportube + CBT Integration',
+      description: 'Everything in Reportube, plus AI question building and instant CBT conversion',
+      popular: true,
+      prices: [
+        { label: 'Primary', price: '250,000' },
+        { label: 'College', price: '300,000' },
+        { label: 'Primary & College', price: '450,000' }
       ]
     }
   ],
-  paymentNote: 'One-time payment — pay once, use forever. Free updates included.',
+  enhancements: [
+    {
+      title: 'Registration Form & Database Management',
+      price: '60,000',
+      description: 'Build a lifelong digital record for every student. Capture registration data, manage student information, and monitor academic progress across classes. Easily identify graduates, transfers, and withdrawn students — no loss of data, ever.'
+    },
+    {
+      title: 'Material Requisition Form',
+      price: '50,000',
+      description: 'Digitize material requisition requests and approvals with automated tracking and organized records.'
+    },
+    {
+      title: 'Attendance',
+      price: '50,000',
+      description: 'Track student attendance digitally with automated records, reports, and easy monitoring across classes.'
+    }
+  ],
+  paymentNote: 'One-time payment · Lifetime ownership · Built for schools, training centres & educational institutions',
   screenshots: [],
   testimonials: [
     {
       name: 'Proprietor, Chrisdem Nursery & Primary School',
       role: 'Ibadan',
-      text: 'ReportTube has completely transformed how we prepare term reports. What used to take us several days of manual work now takes just a few hours. Our teachers love it and the parents are impressed with the professional reports.'
+      text: 'Reportube has completely transformed how we prepare term reports. What used to take us several days of manual work now takes just a few hours. Our teachers love it and the parents are impressed with the professional reports.'
     },
     {
       name: 'Proprietor, As Sabbaq Model School',
       role: 'Ibadan',
-      text: 'We switched to ReportTube and it has been a game-changer for our school. The Google Sheets integration means we don\'t need any special software — it just works. Highly recommend it to every school!'
+      text: 'We switched to Reportube and it has been a game-changer for our school. The Google Sheets integration means we don\'t need any special software — it just works. Highly recommend it to every school!'
     },
     {
       name: 'Proprietor, Al-Furqan Islamic School',
       role: 'Ibadan',
-      text: 'As an Islamic school, we needed something flexible that could handle our unique grading system. ReportTube handled it perfectly. The support team was very helpful in setting everything up for us.'
+      text: 'As an Islamic school, we needed something flexible that could handle our unique grading system. Reportube handled it perfectly. The support team was very helpful in setting everything up for us.'
     }
   ]
 };
 
-export const cbtTube = {
-  name: 'CBT Tube',
-  tagline: 'Computer-Based Testing — Built on Google Workspace',
-  description: 'CBT Tube is a Google Workspace add-on that enables schools to conduct computer-based examinations effortlessly. Import questions via Google Forms, auto-generate exams with Apps Script, and get instant marked results with powerful analytics.',
-  googleIntegration: 'Built on Google Workspace — questions are imported through Google Forms and Apps Script auto-generates exams in seconds. No complex software to install, just use your existing Google account.',
+export const financeTube = {
+  name: 'FinanceTube',
+  tagline: 'Automated School Billing & Fee Management',
+  description: 'Automate your school billing process from start to finish. Generate next-term bills automatically and deliver them directly to parents\' email inboxes. Eliminate manual billing, improve accuracy, and ensure timely communication with parents.',
   features: [
     {
-      title: 'Built on Google Workspace',
-      description: 'Runs inside Google Forms and Sheets — leverage the tools you already use. No extra software to install.'
+      title: 'Automated Next-Term Bills',
+      description: 'Generate next-term bills automatically — no manual typing or calculation errors.'
     },
     {
-      title: 'Easy Question Import',
-      description: 'Import exam questions effortlessly through Google Forms. Simply create your questions in Forms and CBT Tube handles the rest.'
+      title: 'Email Delivery to Parents',
+      description: 'Deliver bills directly to parents\' email inboxes with a single click.'
     },
-    {
-      title: 'Auto-Generate Exams',
-      description: 'Google Apps Script automatically generates and randomizes exam questions in seconds — no manual setup required.'
-    },
-    {
-      title: 'Auto Marking & Scoring',
-      description: 'Exams are automatically graded and scored the moment students submit. Instant results, zero manual work.'
-    },
-    {
-      title: 'Question Bank Management',
-      description: 'Build and manage a comprehensive question bank in Google Sheets. Organize by subject, topic, and difficulty level.'
-    },
-    {
-      title: 'Result Analytics & Reports',
-      description: 'Detailed performance analytics, class averages, subject breakdowns, and exportable result reports for parents and administrators.'
-    }
-  ],
-  pricing: [
-    {
-      name: 'Basic',
-      price: '60,000',
-      period: 'one-time',
-      features: [
-        'Up to 100 students',
-        '1 subject question bank',
-        'Auto marking & scoring',
-        'Basic result reports',
-        'Email support'
-      ]
-    },
-    {
-      name: 'Professional',
-      price: '180,000',
-      period: 'one-time',
-      features: [
-        'Up to 500 students',
-        'Unlimited subjects',
-        'Question bank management',
-        'Advanced analytics',
-        'Priority support',
-        'Custom exam branding'
-      ],
-      popular: true
-    },
-    {
-      name: 'Enterprise',
-      price: '350,000',
-      period: 'one-time',
-      features: [
-        'Unlimited students',
-        'Unlimited subjects',
-        'Full analytics suite',
-        '24/7 support',
-        'Custom integrations',
-        'Multi-school management',
-        'Free lifetime updates'
-      ]
-    }
-  ],
-  paymentNote: 'One-time payment — pay once, use forever. Free updates included.',
-  screenshots: [],
-  testimonials: [
-    {
-      name: 'Proprietor, As Sabbaq Model School',
-      role: 'Ibadan',
-      text: 'CBT Tube has made conducting exams so much easier. We import our questions through Google Forms and the system generates the exam automatically. The auto-marking saves us hours of work after every exam.'
-    },
-    {
-      name: 'Proprietor, Chrisdem Nursery & Primary School',
-      role: 'Ibadan',
-      text: 'Setting up CBT exams used to be a nightmare. With CBT Tube, our teachers can create and deploy exams in minutes. The result analytics give us great insight into student performance.'
-    }
-  ]
-};
-
-export const billTube = {
-  name: 'BillTube',
-  tagline: 'Simplified School Billing & Invoicing',
-  description: 'BillTube is a comprehensive billing solution designed for schools and educational institutions. Manage fees, generate invoices, track payments, and send reminders — all in one place.',
-  features: [
     {
       title: 'Fee Management',
       description: 'Set up different fee structures for classes, terms, and programs.'
-    },
-    {
-      title: 'Invoice Generation',
-      description: 'Professional invoice templates with automatic calculation and itemization.'
     },
     {
       title: 'Payment Tracking',
@@ -201,72 +112,134 @@ export const billTube = {
     },
     {
       title: 'Automated Reminders',
-      description: 'Send payment reminders via SMS or email to parents automatically.'
+      description: 'Send payment reminders to parents automatically — no chasing needed.'
     },
     {
       title: 'Financial Reports',
-      description: 'Generate comprehensive financial reports and summaries.'
-    },
-    {
-      title: 'Multi-Payment Support',
-      description: 'Support for cash, bank transfer, mobile money, and online payments.'
+      description: 'Generate comprehensive financial reports and summaries with ease.'
     }
   ],
   pricing: [
     {
-      name: 'Basic',
-      price: '60,000',
-      period: 'one-time',
+      name: 'Primary',
+      price: '80,000',
       features: [
-        'Up to 100 students',
-        'Basic invoicing',
-        'Payment tracking',
-        'Simple reports',
-        'Email support'
+        'Automated next-term bills',
+        'Email delivery to parents',
+        'Fee & payment tracking',
+        'Automated reminders',
+        'Financial reports',
+        'Lifetime ownership'
       ]
     },
     {
-      name: 'Professional',
-      price: '180,000',
-      period: 'one-time',
+      name: 'College',
+      price: '80,000',
       features: [
-        'Up to 500 students',
-        'Advanced invoicing',
-        'SMS reminders',
+        'Automated next-term bills',
+        'Email delivery to parents',
+        'Fee & payment tracking',
+        'Automated reminders',
         'Financial reports',
+        'Lifetime ownership'
+      ]
+    },
+    {
+      name: 'Primary & College',
+      price: '120,000',
+      features: [
+        'Everything in Primary & College plans',
+        'Both school sections covered',
+        'Automated next-term bills',
+        'Email delivery to parents',
+        'Advanced financial reports',
         'Priority support',
-        'Multi-branch support'
+        'Lifetime ownership'
       ],
       popular: true
-    },
-    {
-      name: 'Enterprise',
-      price: '350,000',
-      period: 'one-time',
-      features: [
-        'Unlimited students',
-        'Full billing suite',
-        'SMS & Email reminders',
-        'Advanced analytics',
-        '24/7 support',
-        'Custom integrations',
-        'Multi-school management',
-        'Free lifetime updates'
-      ]
     }
   ],
-  paymentNote: 'One-time payment — pay once, use forever. Free updates included.',
+  paymentNote: 'One-time payment · Lifetime ownership · Built for schools, training centres & educational institutions',
   screenshots: [],
   testimonials: [
     {
       name: 'Proprietor, Chrisdem Nursery & Primary School',
       role: 'Ibadan',
-      text: 'BillTube has made our fee collection and tracking so much easier. Parents receive their reminders on time and we can see who has paid at a glance. It has reduced the stress on our bursar significantly.'
+      text: 'FinanceTube has made our billing and fee collection so much easier. Parents receive their next-term bills directly in their inboxes on time and we can see who has paid at a glance. It has reduced the stress on our bursar significantly.'
     },
     {
       name: 'Proprietor, As Sabbaq Model School',
       role: 'Ibadan',
-      text: 'Before BillTube, we were struggling with manual fee tracking and frequent disputes. Now everything is transparent and automated. The one-time payment makes it even better — no recurring costs to worry about.'
+      text: 'Before FinanceTube, we were struggling with manual billing and frequent disputes. Now everything is transparent and automated. The one-time payment makes it even better — no recurring costs to worry about.'
     }
   ]
+};
+
+export const entranceExams = {
+  name: 'Entrance Exams (CBT)',
+  tagline: 'AI-Powered Entrance Examination Automation',
+  description: 'Create entrance examination questions effortlessly with AI and convert them into a fully functional CBT platform within minutes. Candidates receive their results instantly, while successful applicants automatically receive admission letters through smart automation.',
+  googleIntegration: 'Built on Google Workspace — create exam questions with AI, convert them into a fully functional CBT platform, and deliver results and admission letters automatically. No complex software to install, just use your existing Google account.',
+  features: [
+    {
+      title: 'AI Question Builder',
+      description: 'Create entrance examination questions effortlessly using AI — no manual question writing.'
+    },
+    {
+      title: 'Instant CBT Platform',
+      description: 'Convert your questions into a fully functional CBT platform within minutes.'
+    },
+    {
+      title: 'Instant Results',
+      description: 'Candidates receive their results the moment they submit their exams.'
+    },
+    {
+      title: 'Admission Letter Automation',
+      description: 'Successful applicants automatically receive admission letters through smart automation.'
+    },
+    {
+      title: 'Secure & Organized',
+      description: 'All exam data securely stored and organized in your Google Workspace account.'
+    },
+    {
+      title: 'Works on Any Device',
+      description: 'Candidates take exams on any device — no software installation required.'
+    }
+  ],
+  pricing: [
+    {
+      name: 'Entrance Exams (CBT)',
+      price: '120,000',
+      description: 'Complete AI-powered entrance examination automation',
+      features: [
+        'AI question building',
+        'Full CBT platform',
+        'Instant results',
+        'Automatic admission letters',
+        'Works on any device',
+        'Lifetime ownership'
+      ]
+    }
+  ],
+  paymentNote: 'One-time payment · Lifetime ownership · Built for schools, training centres & educational institutions',
+  screenshots: [],
+  testimonials: [
+    {
+      name: 'Proprietor, As Sabbaq Model School',
+      role: 'Ibadan',
+      text: 'Entrance Exams has made our admission process so much easier. We create the questions with AI, run the CBT, and successful candidates get their admission letters automatically. It saves us weeks of work.'
+    },
+    {
+      name: 'Proprietor, Chrisdem Nursery & Primary School',
+      role: 'Ibadan',
+      text: 'Setting up entrance exams used to be a nightmare. Now our teachers can create and deploy exams in minutes, and parents receive results immediately. The automation is truly impressive.'
+    }
+  ]
+};
+
+export const staGenerator = {
+  name: 'STA CBT Generator',
+  tagline: 'Launch Professional CBT Exams in Seconds',
+  description: 'Launch professional CBT examinations in seconds. This Workspace + AI-powered solution instantly generates customizable CBT platforms that you control with ease. Perfect for schools, training centres, and certification programmes.',
+  price: null
 };

@@ -41,7 +41,7 @@ export default function Laptops() {
                 {[
                   'Affordable bulk pricing for schools',
                   'Full setup & configuration included',
-                  'Pre-configured for CBT Tube examinations',
+                  'Pre-configured for CBT examinations',
                   'Quality refurbished and new options',
                   'Ongoing technical support'
                 ].map((item, i) => (
@@ -63,11 +63,11 @@ export default function Laptops() {
                 Bulk Order
               </a>
               <a
-                href="/cbttube"
+                href="/entrance-exams"
                 className="inline-flex items-center gap-2 bg-orange-500 text-white font-semibold px-6 py-3 rounded-xl hover:bg-orange-600 transition-colors shadow-md hover:shadow-lg"
               >
                 <FaClipboardCheck />
-                CBT Tube
+                Entrance Exams (CBT)
               </a>
             </div>
           </div>
@@ -125,7 +125,7 @@ export default function Laptops() {
                 {[
                   'Operating system installation & updates',
                   'Software setup & configuration',
-                  'CBT Tube pre-installation (if needed)',
+                  'Entrance Exams (CBT) pre-installation (if needed)',
                   'Network & Wi-Fi configuration',
                   'On-site setup for bulk orders'
                 ].map((item, i) => (

@@ -5,9 +5,9 @@ import { FaBars, FaTimes } from 'react-icons/fa'
 const navLinks = [
   { to: '/', label: 'Home' },
   { to: '/courses', label: 'Courses' },
-  { to: '/reporttube', label: 'ReportTube' },
-  { to: '/billtube', label: 'BillTube' },
-  { to: '/cbttube', label: 'CBT Tube' },
+  { to: '/reporttube', label: 'Reportube' },
+  { to: '/financetube', label: 'FinanceTube' },
+  { to: '/entrance-exams', label: 'Entrance Exams' },
   { to: '/laptops', label: 'Laptops' },
   { to: '/about', label: 'About' },
   { to: '/contact', label: 'Contact' },

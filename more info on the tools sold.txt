@@ -18,3 +18,42 @@ Launch professional CBT examinations in seconds. This Workspace + AI-powered sol
 ✅ One-Time Payment
 ✅ Lifetime Ownership
 ✅ Built for Schools, Training Centres & Educational Institutions
+
+
+
+Products prices
+#A Reportube 
+Pry: 150k
+College: 200k
+Pry and college: 300k
+
+#B Reportube with CBT integration 
+Pry: 250k
+College: 300k
+Pry and College: 450k
+
+#C FinanceTube
+Pry 80k
+College 80k
+Pry&College 120k
+
+#D Entrance Exams (CBT): 120k
+
+#E Enhancements
+Registration Form and Database Management: 60k
+
+Material Requisition Form: 50k
+
+Attendance: 50k
+
+
+I want to make short descriptions on the following products I built with Google workspace tools to advertise to potential customers:
+- Reportube with CBT integration: all automation with result delivered to parents email addresses in a single tap of button. Also uses AI to easily build your Questions and converts to CBT
+
+- FinanceTube: automates and prepares nextterm bill and deliver the bill to parents email addresses 
+
+- Entrance Exams (CBT): makes preparation of Questions and building it into CBT with AI. Candidates receives results and their admission letters with immediate effect using automation 
+
+- Registration Form and Database Management: manages your students database from the registration and monitor their progresses in various classes for life. No loss of data. Students who left are easily identified
+
+- STA CBT Generator: Get a Workspace+AI solution that instantly build a CBT you can control within seconds.

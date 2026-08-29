@@ -1,4 +1,4 @@
-import { cbtTube } from '../data/products'
+import { entranceExams, staGenerator } from '../data/products'
 import SectionHeading from '../components/ui/SectionHeading'
 import Button from '../components/ui/Button'
 import { FaCheck, FaStar, FaArrowRight, FaClipboardCheck } from 'react-icons/fa'
@@ -7,8 +7,8 @@ import googleFormsLogo from '../assets/google-forms.png'
 import googleSheetsLogo from '../assets/google-sheets.png'
 import appsScriptLogo from '../assets/apps-script.png'
 
-export default function CBTTube() {
-  const product = cbtTube
+export default function EntranceExams() {
+  const product = entranceExams
 
   return (
     <div className="py-16 bg-gray-50 min-h-screen">
@@ -39,11 +39,11 @@ export default function CBTTube() {
               <p className="text-gray-600 leading-relaxed mb-4">{product.googleIntegration}</p>
               <ul className="space-y-2">
                 {[
-                  'Questions imported via Google Forms — easy and familiar',
-                  'Apps Script auto-generates and randomizes exams',
-                  'Results stored in Google Sheets — instant access',
-                  'No software to install — runs in your browser',
-                  'Works with your existing Google account'
+                  'Questions created effortlessly with AI',
+                  'Convert questions into a full CBT platform within minutes',
+                  'Results delivered instantly to candidates',
+                  'Admission letters sent automatically to successful applicants',
+                  'No software to install — runs in your browser'
                 ].map((item, i) => (
                   <li key={i} className="flex items-center gap-2 text-gray-700">
                     <FaCheck className="text-green-500 text-sm flex-shrink-0" />
@@ -64,19 +64,19 @@ export default function CBTTube() {
           </div>
         </div>
 
-        {/* How It Works — Easy Question Import */}
+        {/* How It Works */}
         <div className="mb-20">
           <SectionHeading
-            title="How Question Import Works"
-            subtitle="Importing questions is incredibly easy — just use Google Forms"
+            title="How It Works"
+            subtitle="From AI question building to automatic admission letters"
           />
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {[
-              { image: googleFormsLogo, alt: 'Google Forms', title: 'Create in Forms', description: 'Write your exam questions in Google Forms — just like filling a form' },
-              { image: appsScriptLogo, alt: 'Apps Script', title: 'Apps Script Generates', description: 'Apps Script automatically processes and generates the exam from your questions' },
-              { icon: FaClipboardCheck, title: 'Students Take Exam', description: 'Students access the exam via a link and answer questions on any device' },
-              { image: googleSheetsLogo, alt: 'Google Sheets', title: 'Instant Results', description: 'Auto-marked results with analytics appear immediately in Google Sheets' }
+              { image: googleFormsLogo, alt: 'Google Forms', title: 'Create Questions', description: 'Create entrance exam questions effortlessly with AI — right inside Google Forms' },
+              { image: appsScriptLogo, alt: 'Apps Script', title: 'CBT Platform Generated', description: 'Apps Script converts your questions into a fully functional CBT platform in minutes' },
+              { icon: FaClipboardCheck, title: 'Candidates Take Exam', description: 'Candidates access the exam via a link and answer questions on any device' },
+              { image: googleSheetsLogo, alt: 'Google Sheets', title: 'Instant Results & Admission', description: 'Results appear instantly and successful applicants receive admission letters automatically' }
             ].map((item, index) => (
               <div key={index} className="bg-white rounded-2xl p-6 shadow-sm text-center hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1 border border-gray-100 lift">
                 <div className="w-14 h-14 rounded-xl bg-white border border-orange-100 shadow-sm flex items-center justify-center mx-auto mb-4">
@@ -98,7 +98,7 @@ export default function CBTTube() {
         <div className="mb-20">
           <SectionHeading
             title="Powerful Features"
-            subtitle="Everything you need to conduct computer-based examinations"
+            subtitle="Everything you need for seamless entrance examination automation"
           />
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
@@ -121,22 +121,16 @@ export default function CBTTube() {
             subtitle="One-time payment — no subscriptions, no hidden fees. Pay once, use forever."
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="max-w-md mx-auto">
             {product.pricing.map((plan, index) => (
-              <div
-                key={index}
-                className={`bg-white rounded-2xl p-8 shadow-sm border-2 transition-all hover:-translate-y-1 ${
-                  plan.popular ? 'border-orange-500 relative' : 'border-transparent hover:shadow-md'
-                }`}
-              >
-                {plan.popular && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-orange-500 text-white text-sm font-semibold px-4 py-1 rounded-full">
-                    Most Popular
-                  </div>
-                )}
+              <div key={index} className="bg-white rounded-2xl p-8 shadow-sm border-2 border-orange-500 relative hover:-translate-y-1 transition-all">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-orange-500 text-white text-sm font-semibold px-4 py-1 rounded-full">
+                  One-Time Payment
+                </div>
 
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{plan.name}</h3>
-                <div className="mb-6">
+                <h3 className="text-xl font-bold text-gray-900 mb-1 text-center">{plan.name}</h3>
+                <p className="text-sm text-gray-500 mb-6 text-center">{plan.description}</p>
+                <div className="text-center mb-6">
                   <span className="text-4xl font-bold text-orange-600">₦{plan.price}</span>
                   <span className="text-gray-500 text-sm ml-2">one-time</span>
                 </div>
@@ -151,14 +145,10 @@ export default function CBTTube() {
                 </ul>
 
                 <a
-                  href={`https://wa.me/2348026295718?text=Hi, I'm interested in the ${plan.name} plan for CBT Tube (₦${plan.price} one-time payment)`}
+                  href={`https://wa.me/2348026295718?text=Hi, I'm interested in Entrance Exams (CBT) — ₦${plan.price} one-time payment`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`block text-center py-3 rounded-xl font-semibold transition-colors ${
-                    plan.popular
-                      ? 'bg-orange-500 text-white hover:bg-orange-600'
-                      : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
-                  }`}
+                  className="block text-center py-3 rounded-xl font-semibold bg-orange-500 text-white hover:bg-orange-600 transition-colors"
                 >
                   Get Started
                 </a>
@@ -171,6 +161,34 @@ export default function CBTTube() {
           </p>
         </div>
 
+        {/* STA CBT Generator */}
+        <div className="mb-20 bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-gray-100 relative overflow-hidden">
+          <div className="blob w-52 h-52 -top-16 -right-16 bg-orange-200/30" />
+          <div className="relative grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div>
+              <span className="inline-block text-xs font-bold uppercase tracking-wider text-orange-500 mb-2">Also Available</span>
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">{staGenerator.name}</h2>
+              <p className="text-lg text-primary font-semibold mb-3">{staGenerator.tagline}</p>
+              <p className="text-gray-600 leading-relaxed mb-6">{staGenerator.description}</p>
+              <a
+                href="https://wa.me/2348026295718?text=Hi, I'm interested in the STA CBT Generator. Please share more details."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-orange-500 text-white font-semibold px-6 py-3 rounded-xl hover:bg-orange-600 transition-colors"
+              >
+                Contact Us for Pricing
+              </a>
+            </div>
+            <div className="flex justify-center">
+              <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl p-8 text-center text-white shadow-lg">
+                <FaClipboardCheck className="text-4xl mx-auto mb-3" />
+                <div className="text-xl font-bold mb-1">STA CBT Generator</div>
+                <div className="text-sm text-white/80">Instant CBT platforms you control</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Laptops + CBT Bundle CTA */}
         <div className="mb-20 bg-gradient-to-br from-dark via-gray-900 to-dark rounded-3xl p-8 md:p-12 text-white">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
@@ -179,13 +197,13 @@ export default function CBTTube() {
                 Need Laptops for Your CBT Center?
               </h2>
               <p className="text-gray-300 mb-6">
-                We supply affordable laptops in bulk for schools setting up CBT examination centers. Each laptop comes with full setup and configuration for CBT Tube — ready to use from day one.
+                We supply affordable laptops in bulk for schools setting up CBT examination centers. Each laptop comes with full setup and configuration for Entrance Exams (CBT) — ready to use from day one.
               </p>
               <ul className="space-y-2 mb-6">
                 {[
                   'Affordable bulk laptop supply for schools',
                   'Full setup & configuration included',
-                  'Pre-configured for CBT Tube',
+                  'Pre-configured for CBT examinations',
                   'Ongoing technical support'
                 ].map((item, i) => (
                   <li key={i} className="flex items-center gap-2">
@@ -217,7 +235,7 @@ export default function CBTTube() {
                 </div>
                 <div className="bg-white/10 rounded-2xl p-6 text-center">
                   <div className="text-3xl mb-2">📝</div>
-                  <div className="text-sm font-semibold">CBT Tube</div>
+                  <div className="text-sm font-semibold">CBT Ready</div>
                   <div className="text-xs text-gray-400">Pre-installed</div>
                 </div>
                 <div className="bg-white/10 rounded-2xl p-6 text-center">
@@ -258,12 +276,12 @@ export default function CBTTube() {
           <div className="absolute inset-0 opacity-[0.07]" aria-hidden="true"
             style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '28px 28px' }} />
           <div className="relative">
-          <h2 className="text-3xl font-bold tracking-tight mb-4">Ready to Modernize Your Examinations?</h2>
+          <h2 className="text-3xl font-bold tracking-tight mb-4">Ready to Modernize Your Entrance Examinations?</h2>
           <p className="text-white/85 mb-6 max-w-2xl mx-auto">
-            Join schools already using CBT Tube to conduct exams efficiently with auto-marking and instant results — all on Google Workspace.
+            Join schools already using Entrance Exams (CBT) to run efficient, automated admissions — from AI question building to instant results and admission letters.
           </p>
           <Button
-            href="https://wa.me/2348026295718?text=Hi, I'd like to try CBT Tube for my school"
+            href="https://wa.me/2348026295718?text=Hi, I'd like to try Entrance Exams (CBT) for my school"
             variant="white"
             size="lg"
           >

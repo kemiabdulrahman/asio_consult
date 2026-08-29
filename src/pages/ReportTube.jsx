@@ -1,12 +1,14 @@
-import { reportTube } from '../data/products'
+import { reportube } from '../data/products'
 import SectionHeading from '../components/ui/SectionHeading'
 import Button from '../components/ui/Button'
 import { FaCheck, FaStar, FaArrowRight } from 'react-icons/fa'
 import googleLogo from '../assets/google.png'
+import googleFormsLogo from '../assets/google-forms.png'
 import googleSheetsLogo from '../assets/google-sheets.png'
+import appsScriptLogo from '../assets/apps-script.png'
 
 export default function ReportTube() {
-  const product = reportTube
+  const product = reportube
 
   return (
     <div className="py-16 bg-gray-50 min-h-screen">
@@ -39,9 +41,9 @@ export default function ReportTube() {
                 {[
                   'No software to install — runs in your browser',
                   'Works with your existing Google account',
-                  'Familiar Google Sheets interface',
-                  'Automatic cloud backup via Google Drive',
-                  'Share reports via Gmail instantly'
+                  'Reports delivered to parents\' emails with a single click',
+                  'AI creates exam questions & converts them to CBT',
+                  'Automatic cloud backup via Google Drive'
                 ].map((item, i) => (
                   <li key={i} className="flex items-center gap-2 text-gray-700">
                     <FaCheck className="text-green-500 text-sm flex-shrink-0" />
@@ -52,8 +54,12 @@ export default function ReportTube() {
             </div>
             <div className="flex-shrink-0">
               <div className="bg-white rounded-2xl p-6 shadow-sm text-center">
-                <img src={googleSheetsLogo} alt="Google Sheets" className="w-16 h-16 mx-auto mb-2 object-contain" />
-                <div className="text-sm text-gray-500">Google Sheets</div>
+                <div className="flex items-center justify-center gap-3 mb-2">
+                  <img src={googleSheetsLogo} alt="Google Sheets" className="w-12 h-12 object-contain" />
+                  <img src={googleFormsLogo} alt="Google Forms" className="w-12 h-12 object-contain" />
+                  <img src={appsScriptLogo} alt="Apps Script" className="w-12 h-12 object-contain" />
+                </div>
+                <div className="text-sm text-gray-500">Google Workspace Tools</div>
               </div>
             </div>
           </div>
@@ -63,7 +69,7 @@ export default function ReportTube() {
         <div className="mb-20">
           <SectionHeading
             title="Powerful Features"
-            subtitle="Everything you need to automate your school's report generation"
+            subtitle="Everything you need to automate results processing, report delivery, and CBT exams"
           />
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
@@ -79,30 +85,6 @@ export default function ReportTube() {
           </div>
         </div>
 
-        {/* How It Works */}
-        <div className="mb-20 bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-gray-100">
-          <SectionHeading
-            title="How It Works"
-            subtitle="Get started in three simple steps"
-          />
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { step: '01', title: 'Install', description: 'Add ReportTube from the Google Workspace Marketplace' },
-              { step: '02', title: 'Configure', description: 'Set up templates and grading systems in Google Sheets' },
-              { step: '03', title: 'Generate', description: 'Auto-generate and share reports via Google Docs or email' }
-            ].map((item, index) => (
-              <div key={index} className="text-center group">
-                <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-5 group-hover:bg-primary group-hover:scale-110 transition-all duration-300">
-                  <span className="text-2xl font-extrabold text-primary group-hover:text-white">{item.step}</span>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-gray-600">{item.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* Pricing */}
         <div className="mb-20">
           <SectionHeading
@@ -110,7 +92,7 @@ export default function ReportTube() {
             subtitle="One-time payment — no subscriptions, no hidden fees. Pay once, use forever."
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {product.pricing.map((plan, index) => (
               <div
                 key={index}
@@ -124,23 +106,20 @@ export default function ReportTube() {
                   </div>
                 )}
 
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{plan.name}</h3>
-                <div className="mb-6">
-                  <span className="text-4xl font-bold text-primary">₦{plan.price}</span>
-                  <span className="text-gray-500 text-sm ml-2">one-time</span>
+                <h3 className="text-xl font-bold text-gray-900 mb-1">{plan.name}</h3>
+                <p className="text-sm text-gray-500 mb-6">{plan.description}</p>
+
+                <div className="space-y-3 mb-8">
+                  {plan.prices.map((p, i) => (
+                    <div key={i} className="flex items-center justify-between rounded-xl border border-gray-100 px-4 py-3 hover:border-primary/40 transition-colors">
+                      <span className="text-sm font-medium text-gray-600">{p.label}</span>
+                      <span className="text-xl font-bold text-primary">₦{p.price}</span>
+                    </div>
+                  ))}
                 </div>
 
-                <ul className="space-y-3 mb-8">
-                  {plan.features.map((feature, i) => (
-                    <li key={i} className="flex items-start gap-3">
-                      <FaCheck className="text-green-500 mt-1 flex-shrink-0" />
-                      <span className="text-gray-600 text-sm">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
                 <a
-                  href={`https://wa.me/2348026295718?text=Hi, I'm interested in the ${plan.name} plan for ReportTube (₦${plan.price} one-time payment)`}
+                  href={`https://wa.me/2348026295718?text=Hi, I'm interested in ${plan.name} at Asio Consult. Please share more details.`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`block text-center py-3 rounded-xl font-semibold transition-colors ${
@@ -158,6 +137,34 @@ export default function ReportTube() {
           <p className="text-center text-gray-500 text-sm mt-6">
             {product.paymentNote}
           </p>
+        </div>
+
+        {/* Add-on Enhancements */}
+        <div className="mb-20">
+          <SectionHeading
+            title="Add-on Enhancements"
+            subtitle="Extend your solution with powerful add-ons — one-time payment each"
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-7">
+            {product.enhancements.map((enhancement, index) => (
+              <div key={index} className="bg-white rounded-2xl p-7 shadow-sm hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1 border border-gray-100 lift flex flex-col">
+                <h3 className="text-lg font-bold text-gray-900 mb-2">{enhancement.title}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed mb-6 flex-1">{enhancement.description}</p>
+                <div className="flex items-center justify-between border-t border-gray-100 pt-4">
+                  <span className="text-xl font-extrabold text-primary">₦{enhancement.price}</span>
+                  <a
+                    href={`https://wa.me/2348026295718?text=Hi, I'm interested in the ${enhancement.title} add-on (₦${enhancement.price})`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-primary font-semibold text-sm hover:text-primary-dark transition-colors"
+                  >
+                    Inquire <FaArrowRight className="text-xs" />
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Testimonials */}
@@ -188,12 +195,12 @@ export default function ReportTube() {
           <div className="absolute inset-0 opacity-[0.07]" aria-hidden="true"
             style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '28px 28px' }} />
           <div className="relative">
-          <h2 className="text-3xl font-bold tracking-tight mb-4">Ready to Transform Your Report Generation?</h2>
+          <h2 className="text-3xl font-bold tracking-tight mb-4">Ready to Transform Your School's Result Processing?</h2>
           <p className="text-white/85 mb-6 max-w-2xl mx-auto">
-            Join schools already using ReportTube to save time and improve accuracy — right inside Google Sheets.
+            Join schools already using Reportube to process results, send reports to parents, and run CBT exams — right inside Google Workspace.
           </p>
           <Button
-            href="https://wa.me/2348026295718?text=Hi, I'd like to try ReportTube for my school"
+            href="https://wa.me/2348026295718?text=Hi, I'd like to try Reportube for my school"
             variant="white"
             size="lg"
           >

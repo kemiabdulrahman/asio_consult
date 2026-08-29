@@ -4,9 +4,9 @@ import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaWhatsapp, FaMapMarker
 const footerLinks = {
   services: [
     { label: 'ICT Courses', to: '/courses' },
-    { label: 'ReportTube', to: '/reporttube' },
-    { label: 'BillTube', to: '/billtube' },
-    { label: 'CBT Tube', to: '/cbttube' },
+    { label: 'Reportube', to: '/reporttube' },
+    { label: 'FinanceTube', to: '/financetube' },
+    { label: 'Entrance Exams (CBT)', to: '/entrance-exams' },
     { label: 'Laptops & Computers', to: '/laptops' },
   ],
   company: [

@@ -1,5 +1,5 @@
 import Button from '../ui/Button'
-import { FaArrowRight, FaMapMarkerAlt, FaGraduationCap, FaLaptop, FaFileAlt, FaReceipt } from 'react-icons/fa'
+import { FaArrowRight, FaMapMarkerAlt, FaGraduationCap, FaLaptop, FaFileAlt, FaReceipt, FaClipboardCheck } from 'react-icons/fa'
 
 const stats = [
   { value: '30+', label: 'Students Trained' },
@@ -10,8 +10,9 @@ const stats = [
 
 const tiles = [
   { icon: FaGraduationCap, label: 'ICT Courses', color: 'bg-blue-500', to: '/courses' },
-  { icon: FaFileAlt, label: 'ReportTube', color: 'bg-green-500', to: '/reporttube' },
-  { icon: FaReceipt, label: 'BillTube', color: 'bg-purple-500', to: '/billtube' },
+  { icon: FaFileAlt, label: 'Reportube', color: 'bg-green-500', to: '/reporttube' },
+  { icon: FaReceipt, label: 'FinanceTube', color: 'bg-purple-500', to: '/financetube' },
+  { icon: FaClipboardCheck, label: 'Entrance Exams', color: 'bg-orange-500', to: '/entrance-exams' },
   { icon: FaLaptop, label: 'Hardware', color: 'bg-teal-500', to: '/laptops' },
 ]
 
@@ -63,7 +64,7 @@ export default function Hero() {
           </div>
 
           {/* Service tiles */}
-          <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl mx-auto">
+          <div className="mt-16 grid grid-cols-2 sm:grid-cols-5 gap-3 max-w-3xl mx-auto">
             {tiles.map(({ icon: Icon, label, color, to }) => (
               <div key={label} className="group bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 text-center hover:bg-white/10 hover:border-white/25 transition-all duration-300 cursor-pointer">
                 <a href={to} className="block">
