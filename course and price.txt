@@ -1,0 +1,11 @@
+Here are the courses listed in the **ASIO Digital Workforce Academy** brochure and their fees:
+
+| # | Course                                                       | Duration |                                                                            Fee |
+| - | ------------------------------------------------------------ | -------- | -----------------------------------------------------------------------------: |
+| 1 | **Front-End Web Development**                                | 4 months |                                                                   **₦180,000** |
+| 2 | **Back-End Web Development & Deployment**                    | 6 months |                                                                   **₦240,000** |
+| 3 | **Project Management – Digital Tools**                       | 6 months |                                                                   **₦180,000** |
+| 4 | **Computer Applications & Office Productivity**              | 4 months |                                                                   **₦120,000** |
+| 5 | **Graphic Design & Visual Communication**                    | 6 months |                                                                   **₦160,000** |
+| 6 | **Artificial Intelligence for Productivity & Career Growth** | 2 months | **₦80,000** *(shown as a bonus/free for anyone registered for another course)* |
+
